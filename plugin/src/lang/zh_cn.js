@@ -266,7 +266,7 @@ export default {
     selectLocal: '从本地选择',
     selectVault: '从Vault选择',
     selectUrl: '网络图片',
-    imgTitle: '图片标题（可选）'
+    //imgTitle: '图片标题（可选）'
   },
   nodeNote: {
     title: '备注'

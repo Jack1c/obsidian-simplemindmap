@@ -34,9 +34,14 @@ import zhtwTranslations from './locales/zhtw.json'
 import Commands from './ob/Commands.js'
 import markdown from 'simple-mind-map/src/parse/markdown.js'
 import Menus from './ob/Menus.js'
+import logger from './ob/logger.js'
 
 export default class SimpleMindMapPlugin extends Plugin {
   async onload() {
+    // 初始化日志系统
+    logger.setPlugin(this);
+    logger.info('SimpleMindMap 插件开始加载');
+
     // 添加设置
     await this._addSetting()
 
@@ -51,11 +56,14 @@ export default class SimpleMindMapPlugin extends Plugin {
         ['zh-TW']: { translation: zhtwTranslations }
       }
     })
+    logger.debug('多语言系统初始化完成');
 
     addIcon('smm-icon', SIDE_BAR_ICON)
+    logger.debug('图标添加完成');
 
     // 注册自定义视图
     this.registerView(SMM_VIEW_TYPE, leaf => new SmmEditView(leaf, this))
+    logger.debug('思维导图视图注册完成');
 
     // 添加 Ribbon 图标
     this._createSmmFile = this._createSmmFile.bind(this)
@@ -64,28 +72,37 @@ export default class SimpleMindMapPlugin extends Plugin {
       this._t('action.createMindMap'), // 新建思维导图
       this._createSmmFile
     )
+    logger.debug('Ribbon 图标添加完成');
 
     // 添加命令
     this.commands = new Commands(this)
+    logger.debug('命令系统初始化完成');
 
     // 添加右键菜单
     this.menus = new Menus(this)
+    logger.debug('菜单系统初始化完成');
 
     // 打补丁，拦截默认的打开方法
     this._registerMonkeyPatches()
+    logger.debug('Monkey patches 注册完成');
 
     // 切换到思维导图视图
     this._switchToSmmAfterLoad()
+    logger.debug('视图切换初始化完成');
 
     // 创建状态栏子元素
     this._initStatusBar()
+    logger.debug('状态栏初始化完成');
 
     // 处理嵌入的思维导图
     this.markdownPostProcessor = new MarkdownPostProcessor(this)
     this.markdownPostProcessor.register()
+    logger.debug('Markdown 后处理器注册完成');
 
     // 记录打开文件的子路径，用于定位到指定节点
     this.fileToSubpathMap = {}
+
+    logger.info('SimpleMindMap 插件加载完成');
   }
 
   // 创建思维导图文件
@@ -123,11 +140,11 @@ export default class SimpleMindMapPlugin extends Plugin {
         }
       } catch (error) {
         // 新建思维导图失败
-        console.error(error)
+        logger.error('创建思维导图文件失败:', error)
         new Notice(this._t('tip.createMindMapFail'))
       }
     } catch (error) {
-      console.error(error)
+      logger.error('创建思维导图过程失败:', error)
       // 新建思维导图失败
       new Notice(this._t('tip.createMindMapFail'))
     }
@@ -503,10 +520,14 @@ export default class SimpleMindMapPlugin extends Plugin {
 
   // 卸载时清理
   onunload() {
+    logger.info('SimpleMindMap 插件开始卸载');
+
     this.app.workspace.detachLeavesOfType(SMM_VIEW_TYPE)
     this.markdownPostProcessor.destroy()
     // 清理状态栏
     this.statusBarItem?.remove()
     this.commands.clear()
+
+    logger.info('SimpleMindMap 插件卸载完成');
   }
 }

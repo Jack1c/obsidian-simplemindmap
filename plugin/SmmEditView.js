@@ -17,6 +17,7 @@ import {
 } from './ob/metadataAndMarkdown.js'
 import { hideTargetMenu, checkVersion } from './ob/utils.js'
 import LZString from 'lz-string'
+import logger from './ob/logger.js'
 
 // 自定义视图类
 class SmmEditView extends TextFileView {
@@ -101,6 +102,8 @@ class SmmEditView extends TextFileView {
 
   // 打开视图
   async onOpen() {
+    logger.debug(`SmmEditView.onOpen: 打开视图，文件: ${this.file?.path || '未知'}`);
+
     // 注册文件修改监听器
     this.registerEvent(
       this.app.vault.on('modify', this._handleExternalChange.bind(this))
@@ -131,6 +134,8 @@ class SmmEditView extends TextFileView {
         }
       })
     }
+
+    logger.debug('SmmEditView.onOpen: 视图打开完成');
   }
 
   // 获取视图数据（保存到文件）
@@ -140,10 +145,14 @@ class SmmEditView extends TextFileView {
 
   // 解析加载的数据
   async setViewData(data, isClear) {
+    logger.debug(`SmmEditView.setViewData: 设置视图数据，文件: ${this.file?.path || '未知'}, isClear: ${isClear}, 数据长度: ${data?.length || 0}`);
+
     if (this.isHidden) {
+      logger.debug('SmmEditView.setViewData: 视图已隐藏，跳过');
       return
     }
     if (isClear) {
+      logger.debug('SmmEditView.setViewData: 清除现有数据');
       this.clear()
     }
     let rawData = data.trim()
@@ -151,18 +160,24 @@ class SmmEditView extends TextFileView {
       // 空文件处理
       if (!rawData) {
         // 文件内容为空
+        logger.debug('SmmEditView.setViewData: 文件内容为空，使用默认数据');
         throw new Error(this.plugin._t('tip.fileIsEmpty'))
       } else {
+        logger.debug('SmmEditView.setViewData: 解析文件数据');
         this.parsedMindMapData = parseMarkdownText(rawData)
         const content = this.parsedMindMapData.metadata.content
         if (content) {
+          logger.debug(`SmmEditView.setViewData: 解压数据，压缩内容长度: ${content.length}`);
           this.parsedMindMapData.metadata.content =
             LZString.decompressFromBase64(content)
+          logger.debug(`SmmEditView.setViewData: 解压后数据长度: ${this.parsedMindMapData.metadata.content?.length || 0}`);
         } else {
+          logger.error('SmmEditView.setViewData: 文件格式错误，缺少 content 字段');
           throw new Error('文件格式错误')
         }
       }
     } catch (error) {
+      logger.warn(`SmmEditView.setViewData: 解析数据失败，使用默认数据，错误: ${error.message}`);
       rawData = createDefaultText(
         '',
         this.plugin._getCreateDefaultMindMapOptions()
@@ -176,14 +191,17 @@ class SmmEditView extends TextFileView {
       )
     }
     if (isClear) {
+      logger.debug('SmmEditView.setViewData: 清除模式，重新渲染思维导图');
       this._renderMindMap()
     } else if (this.mindMapAPP) {
+      logger.debug('SmmEditView.setViewData: 更新现有思维导图数据');
       this.isNotTriggerDataChange = true
       this.mindMapAPP.$bus.$emit(
         'updateMindMapDataFromOb',
         this.parsedMindMapData.metadata.content
       )
     }
+    logger.debug('SmmEditView.setViewData: 数据设置完成');
   }
 
   // 清理观察者
@@ -450,21 +468,28 @@ class SmmEditView extends TextFileView {
 
   // 重写保存钩子（最直接的方式）
   async save() {
+    logger.debug(`SmmEditView.save: 保存文件，文件: ${this.file?.path || '未知'}, isActive: ${this.isActive}`);
+
     if (!this.isActive) {
+      logger.debug('SmmEditView.save: 视图未激活，跳过保存');
       return
     }
     // 获取一下最新数据
     // 取消本次自动保存
     if (this.mindMapAPP) {
+      logger.debug('SmmEditView.save: 获取最新思维导图数据并清除自动保存');
       this.mindMapAPP.$bus.$emit('getMindMapCurrentData')
       this.mindMapAPP.$bus.$emit('clearAutoSave')
     }
     if (!this.mindMapData) {
+      logger.warn('SmmEditView.save: 没有思维导图数据，跳过保存');
       return
     }
+    logger.debug(`SmmEditView.save: 调用父类保存，数据长度: ${this.mindMapData.length}`);
     await super.save()
     this._setIsUnSave(false)
     this._hideSavingTip()
+    logger.debug('SmmEditView.save: 保存完成');
   }
 
   // 强制保存
@@ -596,6 +621,8 @@ class SmmEditView extends TextFileView {
   }
 
   async onClose() {
+    logger.debug(`SmmEditView.onClose: 关闭视图，文件: ${this.file?.path || '未知'}`);
+
     await this.save() // 手动保存
     this.clear()
     this.saveButton = null

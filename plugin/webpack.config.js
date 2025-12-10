@@ -13,7 +13,7 @@ module.exports = {
     path: path.resolve(__dirname, '../'),
     libraryTarget: 'commonjs'
   },
-  devtool: false,
+  devtool: process.env.NODE_ENV === 'development' ? 'eval-source-map' : false,
   resolve: {
     extensions: ['.ts', '.js', '.vue'],
     alias: {
