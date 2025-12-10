@@ -43,7 +43,7 @@ export default {
     return {
       show: false,
       zIndex: 0,
-      sidebarWidth: 300, // 默认宽度
+      sidebarWidth: 500, // 默认宽度
       isResizing: false,
       startX: 0,
       startWidth: 0
@@ -109,7 +109,7 @@ export default {
       let newWidth = this.startWidth + deltaX
 
       // 限制最小和最大宽度
-      newWidth = Math.max(200, Math.min(800, newWidth))
+      newWidth = Math.max(200, Math.min(900, newWidth))
       this.sidebarWidth = newWidth
 
       e.preventDefault()

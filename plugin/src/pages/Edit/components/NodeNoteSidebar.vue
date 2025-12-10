@@ -1,6 +1,6 @@
 <template>
   <Sidebar ref="sidebar" :title="$t('note.title')">
-    <div class="noteContentWrap" ref="noteContentWrap"></div>
+    <div class="noteContentWrap" ref="noteContentWrap" @dblclick="onNoteContentDblclick"></div>
   </Sidebar>
 </template>
 
@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       editor: null,
-      node: null
+      node: null,
     }
   },
   computed: {
@@ -91,6 +91,13 @@ export default {
           Array.from(this.$refs.noteContentWrap.querySelectorAll('img'))
         )
       })
+    },
+
+    // 备注内容双击事件
+    onNoteContentDblclick() {
+      if (this.node) {
+        this.$root.$bus.$emit('showNodeNote', this.node)
+      }
     }
   }
 }
@@ -100,5 +107,32 @@ export default {
 .noteContentWrap {
   padding: 12px;
   user-select: text;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  :deep(.sidebarContainer.isDark) & {
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+  }
+
+  // 调整Markdown内容的字体大小
+  :deep(.toastui-editor-contents) {
+    font-size: 16px;
+
+    p, h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, pre, code, table {
+      font-size: 16px;
+    }
+
+    h1 { font-size: 24px; }
+    h2 { font-size: 22px; }
+    h3 { font-size: 20px; }
+    h4 { font-size: 18px; }
+    h5 { font-size: 17px; }
+    h6 { font-size: 16px; }
+  }
 }
 </style>

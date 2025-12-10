@@ -3,10 +3,11 @@
     class="nodeNoteDialog smmElDialog"
     :title="$t('nodeNote.title')"
     :visible.sync="dialogVisible"
-    :width="'90%'"
-    :top="isMobile ? '20px' : '15vh'"
+    :width="'70%'"
+    :top="isMobile ? '20px' : '10vh'"
     :modal-append-to-body="false"
     :close-on-click-modal="false"
+    :resize="true"
   >
     <div class="noteEditor" ref="noteEditor" @keyup.stop @keydown.stop></div>
     <span slot="footer" class="dialog-footer">
@@ -100,8 +101,10 @@ export default {
         this.editor = new Editor({
           el: this.$refs.noteEditor,
           height: '500px',
+          minHeight: '200px',
           initialEditType: 'markdown',
-          previewStyle: 'vertical',
+          previewStyle: 'tab',
+          hideModeSwitch: true,
           theme: this.isDark ? 'dark' : 'light',
           language:
             toastUiEditorLangMap[this.$i18n.locale] || toastUiEditorLangMap.en,
@@ -196,12 +199,29 @@ export default {
 <style lang="less" scoped>
 .nodeNoteDialog {
   /deep/ .el-dialog {
-    max-width: 800px;
+    max-width: 90%;
+    min-width: 300px;
+    min-height: 200px;
+
+    // 调整大小手柄样式
+    &.is-dragging {
+      user-select: none;
+    }
+
+    .el-dialog__header {
+      cursor: move;
+    }
   }
 
   .tip {
     margin-top: 5px;
     color: #dcdfe6;
+  }
+
+  // 编辑器容器样式
+  .noteEditor {
+    height: 60%;
+    min-height: 200px;
   }
 }
 </style>
