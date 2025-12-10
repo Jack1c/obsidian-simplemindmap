@@ -1,7 +1,6 @@
 <template>
   <div
     class="sidebarContainer"
-    @click.stop
     :class="{ show: show, isDark: isDark }"
     :style="{
       zIndex: zIndex,
@@ -145,6 +144,7 @@ export default {
   flex-direction: column;
   transition: right 0.3s;
   overflow: hidden;
+  user-select: auto;
 
   &.isDark {
     background-color: #262a2e;
@@ -192,6 +192,7 @@ export default {
     width: 100%;
     height: 100%;
     overflow: auto;
+    user-select: text;
   }
 
   .resize-handle {

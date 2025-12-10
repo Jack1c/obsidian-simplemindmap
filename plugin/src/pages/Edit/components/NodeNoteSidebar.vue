@@ -99,5 +99,6 @@ export default {
 <style lang="less" scoped>
 .noteContentWrap {
   padding: 12px;
+  user-select: text;
 }
 </style>
