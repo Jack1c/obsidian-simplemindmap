@@ -415,14 +415,7 @@ export default {
         ...(config || {}),
         iconList: [...icon],
         useLeftKeySelectionRightKeyDrag: this.useLeftKeySelectionRightKeyDrag,
-        customInnerElsAppendTo: this.$refs.editContainer,
-        handleElPositionOnCustomInnerElsAppendTo: (left, top) => {
-          return {
-            left: left - this.mindMap.elRect.left,
-            top: top - this.mindMap.elRect.top
-          }
-        },
-        textEidtNoOverCanvas: true,
+        customInnerElsAppendTo: null,
         customHandleClipboardText: handleClipboardText,
         defaultNodeImage: imgFail,
         initRootNodePosition: ['center', 'center'],
