@@ -3,7 +3,11 @@
     class="sidebarContainer"
     @click.stop
     :class="{ show: show, isDark: isDark }"
-    :style="{ zIndex: zIndex }"
+    :style="{
+      zIndex: zIndex,
+      width: sidebarWidth + 'px',
+      right: show ? '0' : '-' + sidebarWidth + 'px'
+    }"
   >
     <div class="rightAction">
       <slot name="rightAction"></slot>
@@ -15,6 +19,12 @@
     <div class="sidebarContent smmCustomScrollbar" ref="sidebarContent">
       <slot v-if="show"></slot>
     </div>
+    <!-- 调整大小的手柄 -->
+    <div
+      class="resize-handle"
+      @mousedown="startResize"
+      @touchstart="startResize"
+    ></div>
   </div>
 </template>
 
@@ -33,7 +43,11 @@ export default {
   data() {
     return {
       show: false,
-      zIndex: 0
+      zIndex: 0,
+      sidebarWidth: 300, // 默认宽度
+      isResizing: false,
+      startX: 0,
+      startWidth: 0
     }
   },
   computed: {
@@ -68,6 +82,49 @@ export default {
 
     getEl() {
       return this.$refs.sidebarContent
+    },
+
+    // 开始调整大小
+    startResize(e) {
+      this.isResizing = true
+      this.startX = e.clientX || e.touches[0].clientX
+      this.startWidth = this.sidebarWidth
+
+      // 添加全局事件监听
+      document.addEventListener('mousemove', this.handleResize)
+      document.addEventListener('touchmove', this.handleResize, { passive: false })
+      document.addEventListener('mouseup', this.stopResize)
+      document.addEventListener('touchend', this.stopResize)
+
+      e.preventDefault()
+    },
+
+    // 处理调整大小
+    handleResize(e) {
+      if (!this.isResizing) return
+
+      const clientX = e.clientX || (e.touches && e.touches[0].clientX)
+      if (!clientX) return
+
+      const deltaX = this.startX - clientX
+      let newWidth = this.startWidth + deltaX
+
+      // 限制最小和最大宽度
+      newWidth = Math.max(200, Math.min(800, newWidth))
+      this.sidebarWidth = newWidth
+
+      e.preventDefault()
+    },
+
+    // 停止调整大小
+    stopResize() {
+      this.isResizing = false
+
+      // 移除全局事件监听
+      document.removeEventListener('mousemove', this.handleResize)
+      document.removeEventListener('touchmove', this.handleResize)
+      document.removeEventListener('mouseup', this.stopResize)
+      document.removeEventListener('touchend', this.stopResize)
     }
   }
 }
@@ -76,10 +133,8 @@ export default {
 <style lang="less" scoped>
 .sidebarContainer {
   position: absolute;
-  right: -300px;
   top: 110px;
   bottom: 27px;
-  width: 300px;
   background-color: #fff;
   border-left: 1px solid #e8e8e8;
   border-top: 1px solid #e8e8e8;
@@ -88,7 +143,7 @@ export default {
   border-bottom-left-radius: 10px;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s;
+  transition: right 0.3s;
   overflow: hidden;
 
   &.isDark {
@@ -103,10 +158,6 @@ export default {
     .closeBtn {
       color: #fff;
     }
-  }
-
-  &.show {
-    right: 0;
   }
   
   .rightAction {
@@ -141,6 +192,25 @@ export default {
     width: 100%;
     height: 100%;
     overflow: auto;
+  }
+
+  .resize-handle {
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: col-resize;
+    z-index: 10;
+
+    &:hover,
+    &.resizing {
+      background-color: rgba(66, 133, 244, 0.2);
+    }
+
+    &:active {
+      background-color: rgba(66, 133, 244, 0.4);
+    }
   }
 }
 </style>
