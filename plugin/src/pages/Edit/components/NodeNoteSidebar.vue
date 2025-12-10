@@ -55,17 +55,18 @@ export default {
     ...mapMutations(['setActiveSidebar']),
 
     onNodeActive(...args) {
-      if (this.activeSidebar !== 'noteSidebar') {
-        return
-      }
-      const nodes = [...args[1]]
-      if (nodes.length > 0) {
-        if (nodes[0] !== this.node) {
-          this.setActiveSidebar(null)
-        }
-      } else {
-        this.setActiveSidebar(null)
-      }
+      // 注释掉自动关闭逻辑，让侧边栏只在点击叉号时才关闭
+      // if (this.activeSidebar !== 'noteSidebar') {
+      //   return
+      // }
+      // const nodes = [...args[1]]
+      // if (nodes.length > 0) {
+      //   if (nodes[0] !== this.node) {
+      //     this.setActiveSidebar(null)
+      //   }
+      // } else {
+      //   this.setActiveSidebar(null)
+      // }
     },
 
     // 初始化编辑器
