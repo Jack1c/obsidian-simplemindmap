@@ -23,6 +23,7 @@ import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer'
 import { mapState } from 'vuex'
 import { toastUiEditorLangMap } from '@/config/constant'
 import noteMixin from '@/mixins/note'
+import logger from "../../../../ob/logger";
 
 // 节点备注内容显示
 export default {
@@ -84,18 +85,19 @@ export default {
 
     // 显示备注浮层
     onShowNoteContent(content, left, top, width, height, node) {
-      this.initEditor(() => {
-        this.node = node
-        this.editor.setMarkdown(content)
-        this.handleALink()
-        this.fixNoteImg(
-          Array.from(this.$refs.noteContentViewer.querySelectorAll('img'))
-        )
-        this.show = true
-        this.$nextTick(() => {
-          this.updateNoteContentPosition(left, top, width, height)
-        })
-      })
+      logger.debug('onShowNoteContent 显示备注浮层');
+      // this.initEditor(() => {
+      //   this.node = node
+      //   this.editor.setMarkdown(content)
+      //   this.handleALink()
+      //   this.fixNoteImg(
+      //     Array.from(this.$refs.noteContentViewer.querySelectorAll('img'))
+      //   )
+      //   this.show = true
+      //   this.$nextTick(() => {
+      //     this.updateNoteContentPosition(left, top, width, height)
+      //   })
+      // })
     },
 
     // 超链接新窗口打开
