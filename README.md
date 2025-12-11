@@ -1,186 +1,283 @@
-【[English](./README_en.md) | 简体中文】
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## 项目概述
+
+这是一个 Obsidian 插件项目，名为 SimpleMindMap，为 Obsidian 笔记软件提供思维导图功能。插件基于 [mind-map](https://github.com/wanglin2/mind-map) 项目构建，使用 Vue 2 + Element UI 作为前端框架。
+
+## 项目结构
+
+```
+obsidian-simplemindmap/
+├── plugin/                    # 开发目录（源代码）
+│   ├── main.js               # 插件主入口（继承 Obsidian Plugin 类）
+│   ├── SmmEditView.js        # 思维导图编辑视图（继承 TextFileView）
+│   ├── src/                  # Vue 应用源代码
+│   │   ├── main.js           # Vue 应用初始化
+│   │   ├── store.js          # Vuex 状态管理
+│   │   ├── pages/Edit/       # 编辑页面组件
+│   │   ├── components/       # 通用组件
+│   │   └── config/           # 配置文件（主题、图标、常量等）
+│   ├── ob/                   # Obsidian 集成模块
+│   │   ├── Commands.js       # 命令系统
+│   │   ├── Menus.js          # 菜单系统
+│   │   ├── SmmSettingTab.js  # 设置面板
+│   │   └── utils.js          # 工具函数
+│   ├── locales/              # 国际化文件
+│   └── webpack.config.js     # Webpack 配置
+├── main.js                   # 构建后的插件主文件（输出到根目录）
+├── styles.css                # 构建后的样式文件（输出到根目录）
+└── manifest.json             # Obsidian 插件清单
+```
+
+## 开发工作流程
+
+### 常用命令（在 plugin/ 目录下运行）
+
+```bash
+# 开发模式（监听文件变化）
+npm run dev
+
+# 生产构建
+npm run build
+
+# 代码检查
+npm run lint
+
+# 代码格式化
+npm run format
+
+# 创建节点图片列表（脚本工具）
+npm run createNodeImageList
+
+# AI 服务（脚本工具）
+npm run ai:serve
+```
+
+### 开发流程
+
+1. **进入开发目录**：所有开发工作都在 `plugin/` 目录下进行
+2. **启动开发模式**：运行 `npm run dev`，Webpack 会监听文件变化并自动重新构建
+3. **测试插件**：构建后的文件输出到项目根目录（`main.js` 和 `styles.css`），需要复制到 Obsidian 的插件目录进行测试
+4. **生产构建**：完成开发后运行 `npm run build` 生成最终版本
+
+### 文件输出
+
+- 构建输出到项目根目录：`main.js` 和 `styles.css`
+- Obsidian 插件需要三个文件：`main.js`、`styles.css`、`manifest.json`
+- `manifest.json` 版本号需要手动更新
+
+## 架构说明
+
+### 核心架构
+
+```
+Obsidian Plugin System
+    ↓
+SimpleMindMapPlugin (plugin/main.js)
+    ↓
+SmmEditView (plugin/SmmEditView.js)
+    ↓
+Vue 2 Application (plugin/src/main.js)
+    ↓
+Vue Components + Vuex Store
+    ↓
+simple-mind-map 核心库
+```
+
+### 关键技术栈
+
+- **前端框架**：Vue 2.6.14
+- **UI 组件库**：Element UI 2.15.1
+- **状态管理**：Vuex 3.6.2
+- **国际化**：vue-i18n 8.27.2 + i18next 25.2.1
+- **构建工具**：Webpack 5.98.0 + Babel
+- **核心思维导图库**：simple-mind-map 0.14.0-fix.1
+- **富文本编辑器**：@toast-ui/editor 3.1.5
+
+### 模块职责
+
+1. **Obsidian 集成层** (`plugin/ob/`)
+  - `Commands.js`：注册 Obsidian 命令（新建思维导图等）
+  - `Menus.js`：右键菜单集成
+  - `SmmSettingTab.js`：插件设置面板
+  - `MarkdownPostProcessor.js`：处理 Markdown 中的思维导图嵌入
+
+2. **Vue 应用层** (`plugin/src/`)
+  - `main.js`：初始化 Vue 应用，配置 Element UI、国际化
+  - `store.js`：Vuex 状态管理
+  - `pages/Edit/`：思维导图编辑主界面
+  - `config/`：主题、图标、常量等配置
+
+3. **文件处理**
+  - 文件格式：`.smm.md`（包含元数据、压缩的思维导图数据、图片数据）
+  - 数据压缩：使用 `lz-string` 库压缩/解压数据
+  - 图片处理：支持从 Vault 选择图片，上传到指定目录
+
+### 国际化
+
+- 支持中文、英文、越南语、繁体中文
+- 使用 i18next + vue-i18n 双框架
+- 语言文件：`plugin/locales/` 和 `plugin/src/lang/`
+- 自动跟随 Obsidian 语言设置
+
+## 构建配置
+
+### Webpack 配置要点
+
+- 入口：`plugin/main.js`
+- 输出：`../main.js` 和 `../styles.css`
+- 排除 Obsidian API 作为外部依赖（减小包体积）
+- 生产环境压缩 JS 和 CSS，移除 `console.log`
+- 支持 Vue、CSS、SCSS、Less、图片等资源
+
+### 依赖说明
+
+- `obsidian`：仅作为开发依赖，用于类型定义
+- `simple-mind-map`：核心思维导图功能库
+- `element-ui`：UI 组件库，按需引入
+- `lz-string`：数据压缩，用于文件存储
 
-# SimpleMindMap 插件
+## 开发注意事项
 
-为 Obsidian 提供一个好用的思维导图插件。
+1. **文件路径**：所有构建相关的路径都相对于 `plugin/` 目录
+2. **Obsidian API**：通过 `externals` 排除，运行时从 Obsidian 获取
+3. **Vue 版本**：使用 Vue 2 完整版（包含模板编译器）
+4. **图片处理**：图片资源使用 `asset/inline` 转换为 base64
+5. **代码规范**：使用 ESLint + Prettier，可运行 `npm run lint` 和 `npm run format`
 
-本插件思维导图功能建立在[mind-map](https://github.com/wanglin2/mind-map)项目之上，mind-map 项目提供了一个 js 思维导图库，以及一个完整的在线版思维导图。
+## 插件功能要点
 
-mind-map 也提供了独立的思维导图客户端，可以点击[客户端](https://github.com/wanglin2/mind-map/releases)了解更多。
+- 思维导图文件格式：`.smm.md`
+- 支持 Obsidian 内链和文件链接
+- 支持导入/导出（smm、json、xmind、png、svg、pdf）
+- 支持大纲模式和思维导图模式切换
+- 支持在 Markdown 中嵌入思维导图预览
+- 支持多语言（自动跟随 Obsidian 语言设置）
+- 支持主题切换（暗黑、浅色、跟随 Obsidian）
 
-# 功能清单
+## 调试指南
 
-- 快捷键
+### 开发环境调试
 
-  从`0.1.5+`开始，插件不再提供默认的快捷键，全部转为ob的命令，你可以自行设置命令对应的快捷键。该[文档](./ShortcutKeySettingReference.md)列出了原来的快捷键，可供参考。
+#### 1. 启用 Source Map
+当前 Webpack 配置中 `devtool: false`，如果需要调试，可以修改 `plugin/webpack.config.js`：
+
+```javascript
+// 开发环境使用 source map
+devtool: process.env.NODE_ENV === 'development' ? 'eval-source-map' : false,
+```
+
+或者创建单独的调试配置。
 
-- 思维导图本身的功能可从[mind-map](https://github.com/wanglin2/mind-map)项目了解更多，也可以在这里查[看常见问题](./Help_zh.md)。
-
-- 思维导图文件格式
-
-  格式为：xxx.smm.md，文件内包含：元数据（文件链接、标签：simplemindmap）、压缩编码后的思维导图数据、压缩编码后的图像数据、内链数据。
-
-  修改文件名时请不要将.smm 去掉，否则可能无法正确识别。
-
-- 视图
-
-  xxx.smm.md 文件默认会以思维导图视图打开，也可以以 Markdown 视图打开：
-  方法1.点击思维导图文件右键菜单中的【打开为 Markdown 文档】菜单；
-  方法2.思维导图视图中点击右上角【更多】按钮打开下拉菜单，选择【打开为 Markdown 文档】菜单；
-  首次进入插件时会有引导提示；
-
-- 新建思维导图文件
-
-  提供三种方式：
-
-  1.点击左侧的 Ribbon 图标；
-  2.点击文件夹右键菜单中的【新建思维导图】；
-  3.使用命令【新建思维导图】；
-
-- 命令
-
-  插件提供了一些 Obsidian命令：
-  1.新建思维导图；
-  2.新建思维导图并插入当前文档（md 文档）；
-
-  可输入【smm】快速查询。
-
-- 设置
-
-  插件提供了一些设置：
-
-  1.主题模式（暗黑、浅色、跟随 ob）；
-  2.默认主题；
-  3.默认结构；
-  4.思维导图文件存储目录支持设置三种方式：仓库根目录、指定文件夹、当前文件所在的文件夹；目录支持输入和选择两种方式；
-  5.图片文件存储目录、文件存储目录支持设置四种方式：仓库根目录、指定文件夹、当前文件所在的文件夹、当前文件所在文件夹下指定的子文件夹；
-  6.无操作自动保存时间；
-  7.![[]]嵌入预览时双击是否新窗口打开；
-  8.![[]]嵌入预览背景是否透明；
-  9.新建思维导图文件名的前缀和日期时间戳格式；
-
-- 多语言
-
-  插件支持中文、英文、越南语、繁体。无需手动设置，会跟随 Obsidian 语言自动切换。
-
-- Obsidian 内链
-
-  - 节点超链接支持插入 Obsidian 文件链接：
-    1.激活一个节点；
-    2.点击顶部工具栏中的【超链接】图标；
-    3.在打开的弹窗中切换到【Obsidian 文件】；
-    4.选择一个 Obsidian 文件（支持搜索）；
-    5.点击【添加】按钮；
-    6.添加后点击节点的超链接图标可打开链接的文件；
-    7.超链接图标会区分普通网址和Obsidian 文件；
-
-  - 节点超链接中的内链会自动同步到文件数据中以内链格式存储，提供给 Obsidian 解析双链；
-
-  - 超链接支持添加本地文件：
-    1.在打开的弹窗中切换到【本地文件】，选择的文件会上传到Vault中；
-    2.上传文件的存储路径可以在设置中修改（Obsidian无法识别的文件可能不会在列表中显示，可以通过电脑资源管理器方式打开查看）；
-
-- 思维导图视图右上角自定义的图标按钮介绍
-
-  - 保存并更新图像数据
-
-    点击后会保存当前数据，同时会将当前的思维导图导出为图像数据并更新到文件中，然后在 Markdown 文档中以 ![[]] 格式嵌入后会自动显示该图片。
-
-  - 导出
-
-    点击后会打开导出弹窗。
-
-  - 导入
-
-    点击后会打开导入弹窗。
-
-  - 切换为大纲模式
-
-    1.点击后会切换为大纲编辑模式；
-    2.切换为大纲编辑模式后【保存并更新图像数据】按钮会切换为【保存】按钮，不会更新图像数据；会隐藏【导出】按钮；会新增【打印大纲】按钮；
-    3.【切换为大纲模式】按钮会显示为【切换为思维导图模式】，点击可切换回思维导图模式编辑；
-
-  - 切换只读/编辑模式
-
-    切换为只读模式后会隐藏保存、导入、导出按钮；
-
-  - 保存按钮左侧会显示保存中的提示：【保存中...】
-
-- 拆分模式下的同步
-  1.拆分为两个思维导图模式编辑，编辑其中一个，并且触发保存后，另一个也会同步更新；
-  2.拆分为一个思维导图模式编辑、一个大纲模式编辑模式，编辑其中一个，并且触发保存后，另一个也会同步更新；
-
-- 嵌入预览
-  支持以 ![[]] 格式在 Markdown 文档中嵌入思维导图文件，如果文件中存在图像数据，那么会显示该图像，双击图像可打开文件，否则会提示：【没有可预览图片】，双击也可切换到该思维导图文件；
-
-  图像数据需使用【保存并更新图像数据】按钮手动触发保存和更新，自动保存不会更新图像数据。
-
-  如果同时打开了思维导图文件和嵌入了该思维导图文件的 Markdown 文档，那么思维导图图像更新后，Markdown 文档中的预览图像也会自动更新。
-
-  如果思维导图中存在图片数据，那么嵌入的图像为png格式，否则为svg格式；
-
-  支持在设置中设置嵌入的图像背景是否透明；
-
-  图像可调整宽度：[[xxx.smm|300]]。
-
-- 思维导图视图右下角的状态栏
-  隐藏了 Obsidian 自带的词、字符统计。
-
-  新增思维导图的字数、节点数统计。
-
-- 思维导图设置持久化
-
-  思维导图视图右侧侧边栏中的【基础样式】、【设置】中的修改会同步到插件配置中进行持久化存储。
-
-- 节点图片
-  节点图片弹窗中支持选择当前 Vault 中的图片文件。
-
-  从电脑中选择的图片文件和激活节点直接粘贴的图片会上传到 Vault 中，存储的文件夹可以在设置中修改。另外选择的背景图片也会上传到 vault 中。
-
-  可直接从 Vault 的文件列表中拖拽图片到弹窗中添加。
-
-  导入导出为 smm、json、xmind 文件格式时会转换其中的图片数据：
-
-  ​	1.导入时会解析其中的 base64 格式的图片并上传到 Vault中；
-
-  ​	2.导出时会将 Vault 路径的图片文件转换为 base64 格式；
-
-  支持压缩上传的图片，是否开启压缩及压缩参数可在设置中修改；
-
-- 右键菜单
-  画布的右键菜单中提供【复制为 ob 内链】菜单，点击可复制当前文件为 Obsidian 的内链格式，可粘贴插入到其他文档。
-
-  节点的右键菜单中提供【复制为 ob 内链】菜单，点击可复制当前文件为 Obsidian 的内链格式，和画布右键菜单中的该菜单不一样，会带上当前节点的 id，当粘贴插入到其他文档中，点击打开时可自动定位到该节点。
-
-- 将Markdown文档预览为思维导图
-
-  Markdown文档视图更多菜单中增加【预览为思维导图】选项，点击后显示一个弹窗将文档内容通过思维导图渲染出来，支持切换结构、主题，可导出为png、svg、pdf文件；
-
-# 限制
-
-- 不支持独立窗口编辑
-- 部分 UI 组件的主题色无法同步 Obsidian 的主题色
-
-# 未来
-
-- 适配手机端
-- 支持以预览模式在节点中嵌入其他文档
-
-# bug、建议、需求
-
-有任何bug、建议、需求反馈可在[Issues](https://github.com/wanglin2/obsidian-simplemindmap/issues)里提交。
-
-# 微信公众号
-
-<table>
-    <tr>
-        <td align="center" style="word-wrap: break-word; width: 75.0; height: 75.0">
-            <a href="#">
-                <img src="./gzh.jpeg" width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px"/>
-                <br />
-                <sub style="font-size:14px"><b>微信公众号</b></sub>
-            </a>
-        </td>
-    </tr>
-</table>
-
+#### 2. 控制台日志
+- **开发模式**：`console.log` 语句会保留
+- **生产构建**：Webpack 会移除 `console.log`（通过 TerserPlugin 配置）
+- **调试输出**：可以在代码中添加 `console.debug` 或 `console.warn` 用于调试
+
+#### 3. Vue DevTools
+由于这是 Obsidian 插件，Vue DevTools 可能无法直接使用。但可以通过以下方式调试：
+- 在 Vue 组件中添加 `debugger` 语句
+- 使用浏览器开发者工具的 Sources 面板
+
+### Obsidian 环境调试
+
+#### 1. 开发者工具
+在 Obsidian 中打开开发者工具：
+- **macOS**：`Cmd+Option+I`
+- **Windows/Linux**：`Ctrl+Shift+I`
+- 或通过菜单：帮助 → 切换开发者工具
+
+#### 2. 插件日志
+在插件代码中添加日志：
+```javascript
+console.log('SimpleMindMap: 插件加载');
+console.debug('调试信息:', data);
+console.error('错误信息:', error);
+```
+
+日志会在 Obsidian 开发者工具的 Console 面板显示。
+
+#### 3. 错误追踪
+- 检查 Console 面板的错误和警告
+- 使用 Network 面板查看文件加载和 API 请求
+- 使用 Sources 面板设置断点（需要 source map）
+
+### 常见调试场景
+
+#### 1. 插件加载失败
+- 检查 `manifest.json` 版本号和格式
+- 查看 Console 中的错误信息
+- 确认文件路径正确
+
+#### 2. Vue 组件问题
+- 在组件中添加 `debugger` 语句
+- 检查 Vue 实例是否正确初始化
+- 查看 Vuex store 状态
+
+#### 3. 文件读写问题
+- 检查 `.smm.md` 文件格式
+- 验证数据压缩/解压逻辑
+- 查看文件权限
+
+#### 4. 样式问题
+- 使用 Elements 面板检查 CSS 样式
+- 确认 `styles.css` 正确加载
+- 检查 Element UI 组件样式
+
+### 调试脚本
+
+项目提供了两个调试脚本：
+
+```bash
+# 创建节点图片列表（调试图片相关功能）
+npm run createNodeImageList
+
+# AI 服务（调试 AI 相关功能）
+npm run ai:serve
+```
+
+### 性能调试
+
+1. **内存使用**：使用 Performance 面板记录性能
+2. **包大小**：运行 `npm run build` 后检查输出文件大小
+3. **加载时间**：使用 Network 面板查看资源加载时间
+
+### 测试建议
+
+1. **单元测试**：可以为关键函数添加单元测试
+2. **集成测试**：在 Obsidian 中手动测试各种场景
+3. **跨平台测试**：测试在不同操作系统上的表现
+
+### 快速测试技巧
+
+#### 1. 自动复制脚本
+可以创建脚本自动将构建文件复制到 Obsidian 插件目录：
+
+```bash
+#!/bin/bash
+# build-and-copy.sh
+cd plugin
+npm run build
+cp ../main.js ../styles.css ~/Library/Application\ Support/obsidian/plugins/simple-mind-map/
+echo "构建完成并已复制到插件目录"
+```
+
+#### 2. 开发模式热重载
+1. 运行 `npm run dev` 启动监听模式
+2. Webpack 会自动重新构建文件变化
+3. 在 Obsidian 中重新加载插件：`Cmd+R`（macOS）或 `Ctrl+R`（Windows/Linux）
+
+#### 3. 调试特定功能
+- **思维导图核心**：测试 `simple-mind-map` 库的功能
+- **Vue 组件**：检查组件 props 和事件
+- **文件处理**：验证 `.smm.md` 文件的读写
+- **国际化**：切换 Obsidian 语言测试多语言支持
+
+## 测试部署
+
+1. 运行 `npm run build` 生成生产版本
+2. 将根目录的 `main.js`、`styles.css`、`manifest.json` 复制到 Obsidian 插件目录
+3. 在 Obsidian 中启用插件
+4. 创建 `.smm.md` 文件测试功能
