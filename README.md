@@ -12,6 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 obsidian-simplemindmap/
 ├── plugin/                    # 开发目录（源代码）
 │   ├── main.js               # 插件主入口（继承 Obsidian Plugin 类）
+│   ├── web-main.js           # 网页版本入口文件
+│   ├── web-index.html        # 网页版本 HTML 模板
 │   ├── SmmEditView.js        # 思维导图编辑视图（继承 TextFileView）
 │   ├── src/                  # Vue 应用源代码
 │   │   ├── main.js           # Vue 应用初始化
@@ -25,16 +27,26 @@ obsidian-simplemindmap/
 │   │   ├── SmmSettingTab.js  # 设置面板
 │   │   └── utils.js          # 工具函数
 │   ├── locales/              # 国际化文件
-│   └── webpack.config.js     # Webpack 配置
+│   ├── webpack.config.js     # Obsidian 插件 Webpack 配置
+│   └── webpack.web.config.js # 网页版本 Webpack 配置
 ├── main.js                   # 构建后的插件主文件（输出到根目录）
 ├── styles.css                # 构建后的样式文件（输出到根目录）
-└── manifest.json             # Obsidian 插件清单
+├── manifest.json             # Obsidian 插件清单
+├── dist/                     # 网页版本构建输出目录（构建后生成）
+│   ├── index.html           # 主页面
+│   ├── js/                  # JavaScript 文件
+│   ├── css/                 # CSS 样式文件
+│   ├── images/              # 图片资源
+│   ├── fonts/               # 字体文件
+│   └── manifest.json        # 插件清单（复制）
+└── WEB_BUILD.md             # 网页版本构建指南
 ```
 
 ## 开发工作流程
 
 ### 常用命令（在 plugin/ 目录下运行）
 
+#### Obsidian 插件版本
 ```bash
 # 开发模式（监听文件变化）
 npm run dev
@@ -53,6 +65,18 @@ npm run createNodeImageList
 
 # AI 服务（脚本工具）
 npm run ai:serve
+```
+
+#### 网页版本
+```bash
+# 开发模式（启动开发服务器，支持热重载）
+npm run web:dev
+
+# 生产构建
+npm run web:build
+
+# 生产环境预览
+npm run web:serve
 ```
 
 ### 开发流程
@@ -281,3 +305,39 @@ echo "构建完成并已复制到插件目录"
 2. 将根目录的 `main.js`、`styles.css`、`manifest.json` 复制到 Obsidian 插件目录
 3. 在 Obsidian 中启用插件
 4. 创建 `.smm.md` 文件测试功能
+
+## 网页版本
+
+项目现在支持构建独立的网页版本，可在浏览器中直接运行思维导图应用。
+
+### 网页版本构建命令
+
+```bash
+# 在 plugin/ 目录下运行
+
+# 开发模式（启动开发服务器，支持热重载）
+npm run web:dev
+
+# 生产构建
+npm run web:build
+
+# 生产环境预览
+npm run web:serve
+```
+
+### 网页版本特性
+
+1. **独立运行**：无需安装 Obsidian，直接在浏览器中使用
+2. **完整功能**：包含思维导图编辑、主题切换、布局调整等核心功能
+3. **易于部署**：构建后的静态文件可部署到任何 Web 服务器
+4. **模拟 API**：通过模拟 Obsidian API 实现功能兼容
+
+### 使用说明
+
+1. **开发**：运行 `npm run web:dev`，访问 http://localhost:3000
+2. **构建**：运行 `npm run web:build`，输出到 `dist/` 目录
+3. **部署**：将 `dist/` 目录部署到静态托管服务（GitHub Pages、Netlify、Vercel 等）
+
+### 详细文档
+
+更多关于网页版本的信息，请参考 [WEB_BUILD.md](./WEB_BUILD.md)。

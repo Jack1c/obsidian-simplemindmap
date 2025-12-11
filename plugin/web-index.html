@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleMindMap - 网页版思维导图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .logo .version {
+            background: rgba(255,255,255,0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+
+        .main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .app-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        #app {
+            width: 100%;
+            height: 100%;
+            min-height: 600px;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 600px;
+            gap: 1rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-card ul {
+            list-style: none;
+        }
+
+        .feature-card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .feature-card li:last-child {
+            border-bottom: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .main {
+                padding: 0 1rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>SimpleMindMap</h1>
+                <span class="version">网页版 v1.0</span>
+            </div>
+            <div class="controls">
+                <button class="control-btn" onclick="loadExample()">加载示例</button>
+                <button class="control-btn" onclick="clearCanvas()">清空画布</button>
+                <button class="control-btn" onclick="toggleDarkMode()">切换主题</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="app-container">
+            <div id="app">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>正在加载思维导图应用...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>核心功能</h3>
+                <ul>
+                    <li>创建、编辑思维导图</li>
+                    <li>拖拽调整节点位置</li>
+                    <li>多种主题和布局</li>
+                    <li>节点样式自定义</li>
+                    <li>导入/导出多种格式</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>使用说明</h3>
+                <ul>
+                    <li>双击节点编辑文本</li>
+                    <li>右键节点查看更多操作</li>
+                    <li>使用工具栏调整样式</li>
+                    <li>拖拽节点调整层级</li>
+                    <li>Ctrl+Z 撤销操作</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>快捷键</h3>
+                <ul>
+                    <li>Enter: 添加同级节点</li>
+                    <li>Tab: 添加子节点</li>
+                    <li>Delete: 删除节点</li>
+                    <li>Ctrl+S: 保存</li>
+                    <li>Ctrl+E: 导出</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>基于 SimpleMindMap 构建 | 开源项目</p>
+        <p>提示：这是一个演示版本，数据仅保存在浏览器内存中</p>
+    </div>
+
+    <script>
+        // 简单的控制函数
+        function loadExample() {
+            if (window.smmApp && window.smmApp.$bus) {
+                window.smmApp.$bus.$emit('loadExampleData')
+                alert('示例数据已加载')
+            } else {
+                alert('应用尚未完全加载，请稍后重试')
+            }
+        }
+
+        function clearCanvas() {
+            if (window.smmApp && window.smmApp.$bus) {
+                if (confirm('确定要清空画布吗？')) {
+                    window.smmApp.$bus.$emit('clearCanvas')
+                }
+            }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode')
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'))
+        }
+
+        // 检查暗黑模式偏好
+        if (localStorage.getItem('darkMode') === 'true' ||
+            (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode')
+        }
+
+        // 暗黑模式样式
+        const darkModeStyle = document.createElement('style')
+        darkModeStyle.textContent = `
+            body.dark-mode {
+                background: #1a1a1a;
+                color: #e0e0e0;
+            }
+            body.dark-mode .app-container {
+                background: #2d2d2d;
+            }
+            body.dark-mode .feature-card {
+                background: #2d2d2d;
+                color: #e0e0e0;
+            }
+            body.dark-mode .footer {
+                color: #999;
+                border-top-color: #444;
+            }
+        `
+        document.head.appendChild(darkModeStyle)
+    </script>
+</body>
+</html>
