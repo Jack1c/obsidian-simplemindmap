@@ -57,7 +57,8 @@ export default {
   computed: {
     ...mapState({
       isDark: state => state.localConfig.isDark,
-      isMobile: state => state.isMobile
+      isMobile: state => state.isMobile,
+      noteFontSize: state => state.noteFontSize
     })
   },
   watch: {
@@ -65,6 +66,9 @@ export default {
       if (!val && oldVal) {
         this.$root.$bus.$emit('endTextEdit')
       }
+    },
+    noteFontSize() {
+      this.updateNoteFontSize()
     }
   },
   created() {
@@ -177,6 +181,10 @@ export default {
         })
       }
       this.editor.setMarkdown(this.note)
+      // 初始化后应用字体大小
+      this.$nextTick(() => {
+        this.updateNoteFontSize()
+      })
     },
 
     cancel() {
@@ -239,6 +247,40 @@ export default {
       }
 
       e.preventDefault()
+    },
+
+    // 更新备注字体大小
+    updateNoteFontSize() {
+      if (this.editor && this.$refs.noteEditor) {
+        const baseSize = this.noteFontSize
+        // 获取编辑器内容容器
+        const editorContents = this.$refs.noteEditor.querySelector('.toastui-editor-contents')
+        if (editorContents) {
+          editorContents.style.fontSize = `${baseSize}px`
+
+          // 更新各级标题的字体大小
+          const elements = editorContents.querySelectorAll('p, h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, pre, code, table')
+          elements.forEach(el => {
+            el.style.fontSize = `${baseSize}px`
+          })
+
+          // 标题相对大小
+          const headings = editorContents.querySelectorAll('h1, h2, h3, h4, h5, h6')
+          headings.forEach(el => {
+            const tagName = el.tagName.toLowerCase()
+            let size = baseSize
+            switch(tagName) {
+              case 'h1': size = baseSize * 1.5; break
+              case 'h2': size = baseSize * 1.375; break
+              case 'h3': size = baseSize * 1.25; break
+              case 'h4': size = baseSize * 1.125; break
+              case 'h5': size = baseSize * 1.0625; break
+              case 'h6': size = baseSize; break
+            }
+            el.style.fontSize = `${size}px`
+          })
+        }
+      }
     },
 
     // 停止调整大小
