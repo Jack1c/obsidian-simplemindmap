@@ -9,7 +9,10 @@
     :close-on-click-modal="false"
     :resize="true"
   >
-    <div class="noteEditor" ref="noteEditor" @keyup.stop @keydown.stop></div>
+    <div class="noteEditorContainer">
+      <div class="noteEditor" ref="noteEditor" @keyup.stop @keydown.stop :style="{ height: editorHeight + 'px' }"></div>
+      <div class="resize-handle" @mousedown="startResize" @touchstart="startResize"></div>
+    </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="cancel" size="small" class="smmElButtonSmall">{{
         $t('dialog.cancel')
@@ -44,7 +47,11 @@ export default {
       note: '',
       activeNodes: [],
       editor: null,
-      appointNode: null
+      appointNode: null,
+      editorHeight: 500, // 编辑器高度
+      isResizing: false, // 是否正在调整大小
+      startY: 0, // 调整大小开始时的Y坐标
+      startHeight: 0 // 调整大小开始时的编辑器高度
     }
   },
   computed: {
@@ -100,7 +107,7 @@ export default {
       if (!this.editor) {
         this.editor = new Editor({
           el: this.$refs.noteEditor,
-          height: '500px',
+          height: this.editorHeight + 'px',
           minHeight: '200px',
           initialEditType: 'markdown',
           previewStyle: 'tab',
@@ -191,6 +198,64 @@ export default {
       }
 
       this.cancel()
+    },
+
+    // 开始调整大小
+    startResize(e) {
+      this.isResizing = true
+      this.startY = e.clientY || e.touches[0].clientY
+      this.startHeight = this.editorHeight
+
+      // 添加resizing类
+      const handle = e.target
+      handle.classList.add('resizing')
+
+      // 添加全局事件监听
+      document.addEventListener('mousemove', this.handleResize)
+      document.addEventListener('touchmove', this.handleResize, { passive: false })
+      document.addEventListener('mouseup', this.stopResize)
+      document.addEventListener('touchend', this.stopResize)
+
+      e.preventDefault()
+    },
+
+    // 处理调整大小
+    handleResize(e) {
+      if (!this.isResizing) return
+
+      const clientY = e.clientY || (e.touches && e.touches[0].clientY)
+      if (!clientY) return
+
+      const deltaY = clientY - this.startY
+      let newHeight = this.startHeight + deltaY
+
+      // 限制最小和最大高度
+      newHeight = Math.max(200, Math.min(800, newHeight))
+      this.editorHeight = newHeight
+
+      // 更新编辑器高度
+      if (this.editor) {
+        this.editor.height(newHeight + 'px')
+      }
+
+      e.preventDefault()
+    },
+
+    // 停止调整大小
+    stopResize() {
+      this.isResizing = false
+
+      // 移除resizing类
+      const resizeHandles = document.querySelectorAll('.resize-handle')
+      resizeHandles.forEach(handle => {
+        handle.classList.remove('resizing')
+      })
+
+      // 移除全局事件监听
+      document.removeEventListener('mousemove', this.handleResize)
+      document.removeEventListener('touchmove', this.handleResize)
+      document.removeEventListener('mouseup', this.stopResize)
+      document.removeEventListener('touchend', this.stopResize)
     }
   }
 }
@@ -219,9 +284,36 @@ export default {
   }
 
   // 编辑器容器样式
+  .noteEditorContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
   .noteEditor {
-    height: 60%;
+    width: 100%;
+    height: 100%;
     min-height: 200px;
+  }
+
+  // 调整大小手柄
+  .resize-handle {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 8px;
+    cursor: ns-resize;
+    z-index: 10;
+
+    &:hover,
+    &.resizing {
+      background-color: rgba(66, 133, 244, 0.2);
+    }
+
+    &:active {
+      background-color: rgba(66, 133, 244, 0.4);
+    }
   }
 }
 </style>
