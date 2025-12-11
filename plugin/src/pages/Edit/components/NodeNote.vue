@@ -104,7 +104,7 @@ export default {
           minHeight: '200px',
           initialEditType: 'markdown',
           previewStyle: 'tab',
-          hideModeSwitch: true,
+          hideModeSwitch: false,
           theme: this.isDark ? 'dark' : 'light',
           language:
             toastUiEditorLangMap[this.$i18n.locale] || toastUiEditorLangMap.en,
