@@ -59,18 +59,24 @@ export default {
     ...mapMutations(['setActiveSidebar']),
 
     onNodeActive(...args) {
-      // 注释掉自动关闭逻辑，让侧边栏只在点击叉号时才关闭
-      // if (this.activeSidebar !== 'noteSidebar') {
-      //   return
-      // }
-      // const nodes = [...args[1]]
-      // if (nodes.length > 0) {
-      //   if (nodes[0] !== this.node) {
-      //     this.setActiveSidebar(null)
-      //   }
-      // } else {
-      //   this.setActiveSidebar(null)
-      // }
+      // 如果备注侧边栏未打开，直接返回
+      if (this.activeSidebar !== 'noteSidebar') {
+        return
+      }
+
+      const nodes = [...args[1]]
+
+      // 点击空白位置（没有选中任何节点）时不关闭侧边栏
+      if (nodes.length === 0) {
+        return
+      }
+
+      // 检查新选中的节点中是否包含当前显示的节点
+      // 如果当前显示的节点不在新选中的节点中，则关闭侧边栏
+      const currentNodeInSelection = nodes.some(node => node === this.node)
+      if (!currentNodeInSelection) {
+        this.setActiveSidebar(null)
+      }
     },
 
     // 初始化编辑器
