@@ -131,6 +131,10 @@
     "button": {
       "select": "選擇"
     },
+    "noteFontSize": {
+      "title": "備註字體大小",
+      "desc": "設定備註側邊欄中Markdown內容的字體大小（單位：px）"
+    },
     "other": {
       "title1": "檢查新版本",
       "desc1": "開啟後會在挿件啟動時檢查是否有新版本可用，如果你的網絡訪問不到Github，則建議關閉該選項"

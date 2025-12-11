@@ -25,7 +25,9 @@ const createStore = () => {
       isReadonly: false, // 是否只读
       extraTextOnExport: '', // 导出时底部添加的文字
       // 是否是移动端
-      isMobile: false
+      isMobile: false,
+      // 备注字体大小
+      noteFontSize: 16
     },
     mutations: {
       // 设置本地配置
@@ -58,6 +60,11 @@ const createStore = () => {
       // 设置是否是移动端
       setIsMobile(state, data) {
         state.isMobile = data
+      },
+
+      // 设置备注字体大小
+      setNoteFontSize(state, data) {
+        state.noteFontSize = data
       }
     },
     actions: {}

@@ -131,6 +131,10 @@
     "button": {
       "select": "Select"
     },
+    "noteFontSize": {
+      "title": "Note Font Size",
+      "desc": "Set the font size of Markdown content in the note sidebar (unit: px)"
+    },
     "other": {
       "title1": "Check for new versions",
       "desc1": "After activation, it will check if a new version is available when the plugin starts. If your network cannot access Github, it is recommended to disable this option"

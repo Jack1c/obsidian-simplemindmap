@@ -851,6 +851,13 @@ class SmmEditView extends TextFileView {
     }
   }
 
+  // 更新备注字体大小
+  updateNoteFontSize(fontSize) {
+    if (this.mindMapAPP) {
+      this.mindMapAPP.$bus.$emit('updateNoteFontSize', fontSize)
+    }
+  }
+
   // 获取图片、文件存储路径
   _getFileSavePath(typeKey, pathKey, subPathKey) {
     const type = this.plugin.settings[typeKey]

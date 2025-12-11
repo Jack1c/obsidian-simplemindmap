@@ -56,7 +56,8 @@ export const DEFAULT_SETTINGS = {
   codeBlockInitHeight: 300, // smm代码块方式嵌入时初始高度，单位：px
   supportObSearch: false, // 是否支持ob搜索
   openVersionCheck: true, // 是否开启版本检查
-  saveCanvasViewData: true // 是否存储画布位置和缩放数据
+  saveCanvasViewData: true, // 是否存储画布位置和缩放数据
+  noteFontSize: 16 // 备注字体大小（单位：px）
 }
 
 export const IGNORE_CHECK_SMM = 'ignoreCheckSmm'

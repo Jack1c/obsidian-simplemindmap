@@ -131,6 +131,10 @@
     "button": {
       "select": "选择"
     },
+    "noteFontSize": {
+      "title": "备注字体大小",
+      "desc": "设置备注侧边栏中Markdown内容的字体大小（单位：px）"
+    },
     "other": {
       "title1": "检查新版本",
       "desc1": "开启后会在插件启动时检查是否有新版本可用，如果你的网络访问不到Github，则建议关闭该选项"

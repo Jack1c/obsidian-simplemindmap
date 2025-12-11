@@ -518,6 +518,16 @@ export default class SimpleMindMapPlugin extends Plugin {
     }
   }
 
+  // 更新备注字体大小
+  _updateNoteFontSize(fontSize) {
+    // 通知所有打开的思维导图视图更新字体大小
+    this.app.workspace.getLeavesOfType(SMM_VIEW_TYPE).forEach(leaf => {
+      if (leaf.view && leaf.view.updateNoteFontSize) {
+        leaf.view.updateNoteFontSize(fontSize)
+      }
+    })
+  }
+
   // 卸载时清理
   onunload() {
     logger.info('SimpleMindMap 插件开始卸载');

@@ -87,6 +87,18 @@ export const initApp = (el, obsidianAPI = {}) => {
   }
   // 挂载一些API
   app.$obsidianAPI = obsidianAPI
+
+  // 监听备注字体大小更新事件
+  bus.$on('updateNoteFontSize', (fontSize) => {
+    app.$store.commit('setNoteFontSize', fontSize)
+  })
+
+  // 初始化备注字体大小
+  const settings = obsidianAPI.getSettings()
+  if (settings.noteFontSize) {
+    app.$store.commit('setNoteFontSize', settings.noteFontSize)
+  }
+
   app.$mount(el)
   return app
 }

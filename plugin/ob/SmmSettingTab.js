@@ -616,6 +616,26 @@ export default class SmmSettingTab extends PluginSettingTab {
 
     containerEl.createEl('h2', { text: this.plugin._t('setting.title.title5') })
 
+    // 备注字体大小设置
+    new Setting(containerEl)
+      .setName(this.plugin._t('setting.noteFontSize.title')) // 备注字体大小
+      .setDesc(this.plugin._t('setting.noteFontSize.desc')) // 设置备注侧边栏中Markdown内容的字体大小（单位：px）
+      .addText(text => {
+        text
+          .setValue(String(this.plugin.settings.noteFontSize))
+          .onChange(async value => {
+            value = validateInteger(
+              value,
+              DEFAULT_SETTINGS.noteFontSize,
+              this.plugin._t('tip.integerInputError')
+            )
+            this.plugin.settings.noteFontSize = value
+            await this.plugin._saveSettings()
+            // 通知Vue应用更新字体大小
+            this.plugin._updateNoteFontSize(value)
+          })
+      })
+
     // 是否开启版本检查
     new Setting(containerEl)
       .setName(this.plugin._t('setting.other.title1')) // 是否开启版本检查

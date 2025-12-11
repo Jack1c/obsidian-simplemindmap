@@ -30,7 +30,8 @@ export default {
   computed: {
     ...mapState({
       isDark: state => state.localConfig.isDark,
-      activeSidebar: state => state.activeSidebar
+      activeSidebar: state => state.activeSidebar,
+      noteFontSize: state => state.noteFontSize
     })
   },
   watch: {
@@ -41,6 +42,9 @@ export default {
         this.$refs.sidebar.show = false
         this.editor = null
       }
+    },
+    noteFontSize() {
+      this.updateNoteFontSize()
     }
   },
   created() {
@@ -90,6 +94,8 @@ export default {
         this.fixNoteImg(
           Array.from(this.$refs.noteContentWrap.querySelectorAll('img'))
         )
+        // 应用当前字体大小
+        this.updateNoteFontSize()
       })
     },
 
@@ -97,6 +103,40 @@ export default {
     onNoteContentDblclick() {
       if (this.node) {
         this.$root.$bus.$emit('showNodeNote', this.node)
+      }
+    },
+
+    // 更新备注字体大小
+    updateNoteFontSize() {
+      if (this.$refs.noteContentWrap) {
+        // 动态更新样式
+        const baseSize = this.noteFontSize
+        const editorContents = this.$refs.noteContentWrap.querySelector('.toastui-editor-contents')
+        if (editorContents) {
+          editorContents.style.fontSize = `${baseSize}px`
+
+          // 更新各级标题的字体大小
+          const elements = editorContents.querySelectorAll('p, h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, pre, code, table')
+          elements.forEach(el => {
+            el.style.fontSize = `${baseSize}px`
+          })
+
+          // 标题相对大小
+          const headings = editorContents.querySelectorAll('h1, h2, h3, h4, h5, h6')
+          headings.forEach(el => {
+            const tagName = el.tagName.toLowerCase()
+            let size = baseSize
+            switch(tagName) {
+              case 'h1': size = baseSize * 1.5; break
+              case 'h2': size = baseSize * 1.375; break
+              case 'h3': size = baseSize * 1.25; break
+              case 'h4': size = baseSize * 1.125; break
+              case 'h5': size = baseSize * 1.0625; break
+              case 'h6': size = baseSize; break
+            }
+            el.style.fontSize = `${size}px`
+          })
+        }
       }
     }
   }
@@ -119,20 +159,9 @@ export default {
     }
   }
 
-  // 调整Markdown内容的字体大小
+  // 字体大小由JavaScript动态设置
   :deep(.toastui-editor-contents) {
-    font-size: 16px;
-
-    p, h1, h2, h3, h4, h5, h6, ul, ol, li, blockquote, pre, code, table {
-      font-size: 16px;
-    }
-
-    h1 { font-size: 24px; }
-    h2 { font-size: 22px; }
-    h3 { font-size: 20px; }
-    h4 { font-size: 18px; }
-    h5 { font-size: 17px; }
-    h6 { font-size: 16px; }
+    // 字体大小将在updateNoteFontSize方法中动态设置
   }
 }
 </style>

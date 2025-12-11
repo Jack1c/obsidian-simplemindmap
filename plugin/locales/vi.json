@@ -131,6 +131,10 @@
     "button": {
       "select": "Chọn"
     },
+    "noteFontSize": {
+      "title": "Kích thước phông chữ ghi chú",
+      "desc": "Đặt kích thước phông chữ của nội dung Markdown trong thanh bên ghi chú (đơn vị: px)"
+    },
     "other": {
       "title1": "Kiểm tra phiên bản mới",
       "desc1": "Khi plugin khởi động, bạn sẽ kiểm tra xem có phiên bản mới không và nếu mạng của bạn không truy cập được Github, bạn nên tắt tùy chọn này."
