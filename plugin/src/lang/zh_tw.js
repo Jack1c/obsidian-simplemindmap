@@ -97,7 +97,27 @@ export default {
     title1: '節點',
     title2: '編輯',
     title3: '顯示',
-    title4: '其他'
+    title4: '其他',
+    // 節點大小調整設定
+    nodeSize: {
+      title: '節點大小調整',
+      enableDragModifyNodeWidth: {
+        title: '允許拖拽調整節點寬度',
+        desc: '是否允許通過拖拽節點兩側的手柄來調整節點寬度'
+      },
+      minNodeTextModifyWidth: {
+        title: '最小節點寬度',
+        desc: '節點文本內容允許壓縮的最小寬度（單位：px）'
+      },
+      maxNodeTextModifyWidth: {
+        title: '最大節點寬度',
+        desc: '節點文本內容允許壓縮的最大寬度（單位：px，-1表示不限制）'
+      },
+      nodeInitialAutoAlignWidth: {
+        title: '節點初始寬度',
+        desc: '節點初始自動對齊寬度（單位：px）'
+      }
+    }
   },
   color: {
     moreColor: '更多顏色'

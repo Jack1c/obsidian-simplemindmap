@@ -96,7 +96,27 @@ export default {
     title1: '节点',
     title2: '编辑',
     title3: '显示',
-    title4: '其他'
+    title4: '其他',
+    // 节点大小调整设置
+    nodeSize: {
+      title: '节点大小调整',
+      enableDragModifyNodeWidth: {
+        title: '允许拖拽调整节点宽度',
+        desc: '是否允许通过拖拽节点两侧的手柄来调整节点宽度'
+      },
+      minNodeTextModifyWidth: {
+        title: '最小节点宽度',
+        desc: '节点文本内容允许压缩的最小宽度（单位：px）'
+      },
+      maxNodeTextModifyWidth: {
+        title: '最大节点宽度',
+        desc: '节点文本内容允许压缩的最大宽度（单位：px，-1表示不限制）'
+      },
+      nodeInitialAutoAlignWidth: {
+        title: '节点初始宽度',
+        desc: '节点初始自动对齐宽度（单位：px）'
+      }
+    }
   },
   color: {
     moreColor: '更多颜色'

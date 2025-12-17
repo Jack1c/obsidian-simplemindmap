@@ -100,7 +100,27 @@ export default {
     title1: 'Node',
     title2: 'Edit',
     title3: 'Display',
-    title4: 'Other'
+    title4: 'Other',
+    // Node size adjustment settings
+    nodeSize: {
+      title: 'Node Size Adjustment',
+      enableDragModifyNodeWidth: {
+        title: 'Enable drag to adjust node width',
+        desc: 'Whether to allow adjusting node width by dragging handles on both sides of the node'
+      },
+      minNodeTextModifyWidth: {
+        title: 'Minimum node width',
+        desc: 'Minimum width allowed for node text content compression (unit: px)'
+      },
+      maxNodeTextModifyWidth: {
+        title: 'Maximum node width',
+        desc: 'Maximum width allowed for node text content compression (unit: px, -1 means no limit)'
+      },
+      nodeInitialAutoAlignWidth: {
+        title: 'Initial node width',
+        desc: 'Initial auto-alignment width for nodes (unit: px)'
+      }
+    }
   },
   color: {
     moreColor: 'More color'

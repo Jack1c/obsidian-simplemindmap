@@ -57,7 +57,12 @@ export const DEFAULT_SETTINGS = {
   supportObSearch: false, // 是否支持ob搜索
   openVersionCheck: true, // 是否开启版本检查
   saveCanvasViewData: true, // 是否存储画布位置和缩放数据
-  noteFontSize: 16 // 备注字体大小（单位：px）
+  noteFontSize: 16, // 备注字体大小（单位：px）
+  // 节点大小调整配置
+  enableDragModifyNodeWidth: true, // 是否允许拖拽调整节点宽度
+  minNodeTextModifyWidth: 20, // 节点文本内容允许压缩的最小宽度（单位：px）
+  maxNodeTextModifyWidth: -1, // 节点文本内容允许压缩的最大宽度（单位：px，-1表示不限制）
+  nodeInitialAutoAlignWidth: 200 // 节点初始自动对齐宽度（单位：px）
 }
 
 export const IGNORE_CHECK_SMM = 'ignoreCheckSmm'

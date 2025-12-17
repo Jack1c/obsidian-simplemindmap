@@ -282,11 +282,30 @@ class SmmEditView extends TextFileView {
       },
       // 获取思维导图配置
       getMindMapConfig: () => {
-        return this.plugin.settings.mindMapConfig || {}
+        const mindMapConfig = this.plugin.settings.mindMapConfig || {}
+        // 合并节点大小调整配置
+        const nodeSizeConfig = {
+          enableDragModifyNodeWidth: this.plugin.settings.enableDragModifyNodeWidth,
+          minNodeTextModifyWidth: this.plugin.settings.minNodeTextModifyWidth,
+          maxNodeTextModifyWidth: this.plugin.settings.maxNodeTextModifyWidth,
+          nodeInitialAutoAlignWidth: this.plugin.settings.nodeInitialAutoAlignWidth
+        }
+        return {
+          ...mindMapConfig,
+          ...nodeSizeConfig
+        }
       },
       // 设置思维导图配置
       saveMindMapConfig: newConfig => {
-        this.plugin.settings.mindMapConfig = newConfig
+        // 排除节点大小调整配置，这些配置通过设置面板单独保存
+        const {
+          enableDragModifyNodeWidth,
+          minNodeTextModifyWidth,
+          maxNodeTextModifyWidth,
+          nodeInitialAutoAlignWidth,
+          ...otherConfig
+        } = newConfig
+        this.plugin.settings.mindMapConfig = otherConfig
         this.plugin._saveSettings()
       },
       // 获取思维导图本地配置
@@ -307,6 +326,18 @@ class SmmEditView extends TextFileView {
       // 获取设置
       getSettings: () => {
         return this.plugin.settings || {}
+      },
+      // 更新节点大小配置到当前思维导图
+      updateNodeSizeConfigToMindMap: () => {
+        if (this.mindMap) {
+          const nodeSizeConfig = {
+            enableDragModifyNodeWidth: this.plugin.settings.enableDragModifyNodeWidth,
+            minNodeTextModifyWidth: this.plugin.settings.minNodeTextModifyWidth,
+            maxNodeTextModifyWidth: this.plugin.settings.maxNodeTextModifyWidth,
+            nodeInitialAutoAlignWidth: this.plugin.settings.nodeInitialAutoAlignWidth
+          }
+          this.mindMap.updateConfig(nodeSizeConfig)
+        }
       },
       updateSettings: data => {
         this.plugin.settings = {

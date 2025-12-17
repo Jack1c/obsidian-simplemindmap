@@ -102,7 +102,27 @@ export default {
     title1: 'Nút',
     title2: 'Chỉnh sửa',
     title3: 'Hiển thị',
-    title4: 'Khác'
+    title4: 'Khác',
+    // Cài đặt điều chỉnh kích thước nút
+    nodeSize: {
+      title: 'Điều chỉnh kích thước nút',
+      enableDragModifyNodeWidth: {
+        title: 'Cho phép kéo để điều chỉnh chiều rộng nút',
+        desc: 'Có cho phép điều chỉnh chiều rộng nút bằng cách kéo tay cầm ở hai bên nút không'
+      },
+      minNodeTextModifyWidth: {
+        title: 'Chiều rộng nút tối thiểu',
+        desc: 'Chiều rộng tối thiểu cho phép nén nội dung văn bản nút (đơn vị: px)'
+      },
+      maxNodeTextModifyWidth: {
+        title: 'Chiều rộng nút tối đa',
+        desc: 'Chiều rộng tối đa cho phép nén nội dung văn bản nút (đơn vị: px, -1 có nghĩa là không giới hạn)'
+      },
+      nodeInitialAutoAlignWidth: {
+        title: 'Chiều rộng nút ban đầu',
+        desc: 'Chiều rộng căn chỉnh tự động ban đầu cho các nút (đơn vị: px)'
+      }
+    }
   },
   color: {
     moreColor: 'Thêm màu'

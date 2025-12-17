@@ -636,6 +636,92 @@ export default class SmmSettingTab extends PluginSettingTab {
           })
       })
 
+    // 节点大小调整设置
+    containerEl.createEl('h3', { text: this.plugin._t('setting.nodeSize.title') })
+
+    // 是否允许拖拽调整节点宽度
+    new Setting(containerEl)
+      .setName(this.plugin._t('setting.nodeSize.enableDragModifyNodeWidth.title'))
+      .setDesc(this.plugin._t('setting.nodeSize.enableDragModifyNodeWidth.desc'))
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.plugin.settings.enableDragModifyNodeWidth)
+          .onChange(async value => {
+            this.plugin.settings.enableDragModifyNodeWidth = value
+            await this.plugin._saveSettings()
+            // 通知当前打开的思维导图更新配置
+            this.plugin._updateNodeSizeConfigToCurrentMindMap()
+          })
+      })
+
+    // 节点文本内容允许压缩的最小宽度
+    new Setting(containerEl)
+      .setName(this.plugin._t('setting.nodeSize.minNodeTextModifyWidth.title'))
+      .setDesc(this.plugin._t('setting.nodeSize.minNodeTextModifyWidth.desc'))
+      .addText(text => {
+        text
+          .setValue(String(this.plugin.settings.minNodeTextModifyWidth))
+          .onChange(async value => {
+            value = validateInteger(
+              value,
+              DEFAULT_SETTINGS.minNodeTextModifyWidth,
+              this.plugin._t('tip.integerInputError')
+            )
+            this.plugin.settings.minNodeTextModifyWidth = value
+            await this.plugin._saveSettings()
+            // 通知当前打开的思维导图更新配置
+            this.plugin._updateNodeSizeConfigToCurrentMindMap()
+          })
+      })
+
+    // 节点文本内容允许压缩的最大宽度
+    new Setting(containerEl)
+      .setName(this.plugin._t('setting.nodeSize.maxNodeTextModifyWidth.title'))
+      .setDesc(this.plugin._t('setting.nodeSize.maxNodeTextModifyWidth.desc'))
+      .addText(text => {
+        text
+          .setValue(String(this.plugin.settings.maxNodeTextModifyWidth))
+          .onChange(async value => {
+            // 特殊处理：-1表示不限制
+            if (value === '-1') {
+              this.plugin.settings.maxNodeTextModifyWidth = -1
+              await this.plugin._saveSettings()
+              // 通知当前打开的思维导图更新配置
+              this.plugin._updateNodeSizeConfigToCurrentMindMap()
+              return
+            }
+            value = validateInteger(
+              value,
+              DEFAULT_SETTINGS.maxNodeTextModifyWidth,
+              this.plugin._t('tip.integerInputError')
+            )
+            this.plugin.settings.maxNodeTextModifyWidth = value
+            await this.plugin._saveSettings()
+            // 通知当前打开的思维导图更新配置
+            this.plugin._updateNodeSizeConfigToCurrentMindMap()
+          })
+      })
+
+    // 节点初始自动对齐宽度
+    new Setting(containerEl)
+      .setName(this.plugin._t('setting.nodeSize.nodeInitialAutoAlignWidth.title'))
+      .setDesc(this.plugin._t('setting.nodeSize.nodeInitialAutoAlignWidth.desc'))
+      .addText(text => {
+        text
+          .setValue(String(this.plugin.settings.nodeInitialAutoAlignWidth))
+          .onChange(async value => {
+            value = validateInteger(
+              value,
+              DEFAULT_SETTINGS.nodeInitialAutoAlignWidth,
+              this.plugin._t('tip.integerInputError')
+            )
+            this.plugin.settings.nodeInitialAutoAlignWidth = value
+            await this.plugin._saveSettings()
+            // 通知当前打开的思维导图更新配置
+            this.plugin._updateNodeSizeConfigToCurrentMindMap()
+          })
+      })
+
     // 是否开启版本检查
     new Setting(containerEl)
       .setName(this.plugin._t('setting.other.title1')) // 是否开启版本检查

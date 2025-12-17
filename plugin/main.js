@@ -528,6 +528,16 @@ export default class SimpleMindMapPlugin extends Plugin {
     })
   }
 
+  // 更新节点大小配置到当前思维导图
+  _updateNodeSizeConfigToCurrentMindMap() {
+    // 通知所有打开的思维导图视图更新节点大小配置
+    this.app.workspace.getLeavesOfType(SMM_VIEW_TYPE).forEach(leaf => {
+      if (leaf.view && leaf.view.updateNodeSizeConfigToMindMap) {
+        leaf.view.updateNodeSizeConfigToMindMap()
+      }
+    })
+  }
+
   // 卸载时清理
   onunload() {
     logger.info('SimpleMindMap 插件开始卸载');
