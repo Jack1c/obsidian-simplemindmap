@@ -16,3 +16,4 @@ plugin/libs/
 # Plugin build outputs
 plugin/node_modules/
 plugin/.DS_Store
+.DS_Store
