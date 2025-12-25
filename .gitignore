@@ -9,4 +9,10 @@ main.js.LICENSE.txt
 /main.js
 /styles.css
 .idea
-.DS_Store
+
+# Plugin local dependencies (optional - can be cloned by users)
+plugin/libs/
+
+# Plugin build outputs
+plugin/node_modules/
+plugin/.DS_Store
