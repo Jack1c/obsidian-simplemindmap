@@ -16,14 +16,17 @@ module.exports = {
   devtool: process.env.NODE_ENV === 'development' ? 'eval-source-map' : false,
   resolve: {
     extensions: ['.ts', '.js', '.vue'],
+    modules: [
+      'node_modules',
+      path.resolve(__dirname, './node_modules'),
+      path.resolve(__dirname, './libs/mind-map/simple-mind-map/node_modules')
+    ],
     alias: {
       vue$: 'vue/dist/vue.esm.js', // 确保使用完整版 Vue（包含模板编译器）
       '@': path.resolve(__dirname, './src'),
       stream: require.resolve('stream-browserify'),
       'simple-mind-map': path.resolve(__dirname, './libs/mind-map/simple-mind-map'),
-      'simple-mind-map-plugin-themes': path.resolve(__dirname, './libs/simple-mind-map-plugin-themes'),
-      'quill-delta': path.resolve(__dirname, './libs/mind-map/simple-mind-map/node_modules/.pnpm/quill-delta@5.1.0/node_modules/quill-delta'),
-      'parchment': path.resolve(__dirname, './libs/mind-map/simple-mind-map/node_modules/.pnpm/parchment@3.0.0/node_modules/parchment')
+      'simple-mind-map-plugin-themes': path.resolve(__dirname, './libs/simple-mind-map-plugin-themes')
     },
     fallback: {
       string_decoder: require.resolve('string_decoder/'),
