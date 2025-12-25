@@ -125,8 +125,8 @@ jobs:
     - name: 创建 Release 并上传产物
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: v${{ steps.get_version.outputs.version }}
-        name: Release v${{ steps.get_version.outputs.version }}
+        tag_name: ${{ steps.get_version.outputs.version }}
+        name: Release ${{ steps.get_version.outputs.version }}
         skip_if_duplicate: true
         body: |
           ## 自动构建版本
@@ -148,7 +148,7 @@ jobs:
       if: success()
       run: |
         echo "✅ 构建成功！"
-        echo "发布版本: v${{ steps.get_version.outputs.version }}"
+        echo "发布版本: ${{ steps.get_version.outputs.version }}"
         echo "文件已上传到 Release"
 
     - name: 构建失败通知
