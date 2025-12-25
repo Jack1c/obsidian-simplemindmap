@@ -135,6 +135,25 @@
       "title": "備註字體大小",
       "desc": "設定備註側邊欄中Markdown內容的字體大小（單位：px）"
     },
+    "nodeSize": {
+      "title": "節點大小調整",
+      "enableDragModifyNodeWidth": {
+        "title": "允許拖拽調整節點寬度",
+        "desc": "是否允許通過拖拽節點兩側的手柄來調整節點寬度"
+      },
+      "minNodeTextModifyWidth": {
+        "title": "最小節點寬度",
+        "desc": "節點文本內容允許壓縮的最小寬度（單位：px）"
+      },
+      "maxNodeTextModifyWidth": {
+        "title": "最大節點寬度",
+        "desc": "節點文本內容允許壓縮的最大寬度（單位：px，-1表示不限制）"
+      },
+      "nodeInitialAutoAlignWidth": {
+        "title": "節點初始寬度",
+        "desc": "節點初始自動對齊寬度（單位：px）"
+      }
+    },
     "other": {
       "title1": "檢查新版本",
       "desc1": "開啟後會在挿件啟動時檢查是否有新版本可用，如果你的網絡訪問不到Github，則建議關閉該選項"

@@ -135,6 +135,25 @@
       "title": "Note Font Size",
       "desc": "Set the font size of Markdown content in the note sidebar (unit: px)"
     },
+    "nodeSize": {
+      "title": "Node size adjustment",
+      "enableDragModifyNodeWidth": {
+        "title": "Enable drag to adjust node width",
+        "desc": "Whether to allow adjusting node width by dragging handles on both sides of the node"
+      },
+      "minNodeTextModifyWidth": {
+        "title": "Minimum node width",
+        "desc": "Minimum width allowed for node text content compression (unit: px)"
+      },
+      "maxNodeTextModifyWidth": {
+        "title": "Maximum node width",
+        "desc": "Maximum width allowed for node text content compression (unit: px, -1 means no limit)"
+      },
+      "nodeInitialAutoAlignWidth": {
+        "title": "Initial node width",
+        "desc": "Initial auto-alignment width for nodes (unit: px)"
+      }
+    },
     "other": {
       "title1": "Check for new versions",
       "desc1": "After activation, it will check if a new version is available when the plugin starts. If your network cannot access Github, it is recommended to disable this option"

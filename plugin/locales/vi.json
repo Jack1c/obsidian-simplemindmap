@@ -135,6 +135,25 @@
       "title": "Kích thước phông chữ ghi chú",
       "desc": "Đặt kích thước phông chữ của nội dung Markdown trong thanh bên ghi chú (đơn vị: px)"
     },
+    "nodeSize": {
+      "title": "Điều chỉnh kích thước nút",
+      "enableDragModifyNodeWidth": {
+        "title": "Cho phép kéo để điều chỉnh chiều rộng nút",
+        "desc": "Có cho phép điều chỉnh chiều rộng nút bằng cách kéo tay cầm ở hai bên nút không"
+      },
+      "minNodeTextModifyWidth": {
+        "title": "Chiều rộng nút tối thiểu",
+        "desc": "Chiều rộng tối thiểu cho phép nén nội dung văn bản nút (đơn vị: px)"
+      },
+      "maxNodeTextModifyWidth": {
+        "title": "Chiều rộng nút tối đa",
+        "desc": "Chiều rộng tối đa cho phép nén nội dung văn bản nút (đơn vị: px, -1 có nghĩa là không giới hạn)"
+      },
+      "nodeInitialAutoAlignWidth": {
+        "title": "Chiều rộng nút ban đầu",
+        "desc": "Chiều rộng căn chỉnh tự động ban đầu cho các nút (đơn vị: px)"
+      }
+    },
     "other": {
       "title1": "Kiểm tra phiên bản mới",
       "desc1": "Khi plugin khởi động, bạn sẽ kiểm tra xem có phiên bản mới không và nếu mạng của bạn không truy cập được Github, bạn nên tắt tùy chọn này."

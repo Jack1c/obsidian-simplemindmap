@@ -135,6 +135,25 @@
       "title": "备注字体大小",
       "desc": "设置备注侧边栏中Markdown内容的字体大小（单位：px）"
     },
+    "nodeSize": {
+      "title": "节点大小调整",
+      "enableDragModifyNodeWidth": {
+        "title": "允许拖拽调整节点宽度",
+        "desc": "是否允许通过拖拽节点两侧的手柄来调整节点宽度"
+      },
+      "minNodeTextModifyWidth": {
+        "title": "最小节点宽度",
+        "desc": "节点文本内容允许压缩的最小宽度（单位：px）"
+      },
+      "maxNodeTextModifyWidth": {
+        "title": "最大节点宽度",
+        "desc": "节点文本内容允许压缩的最大宽度（单位：px，-1表示不限制）"
+      },
+      "nodeInitialAutoAlignWidth": {
+        "title": "节点初始宽度",
+        "desc": "节点初始自动对齐宽度（单位：px）"
+      }
+    },
     "other": {
       "title1": "检查新版本",
       "desc1": "开启后会在插件启动时检查是否有新版本可用，如果你的网络访问不到Github，则建议关闭该选项"
