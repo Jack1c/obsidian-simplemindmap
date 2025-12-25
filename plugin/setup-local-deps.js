@@ -11,7 +11,6 @@ const path = require('path');
 
 const libsDir = path.join(__dirname, 'libs');
 const mindMapDir = path.join(libsDir, 'mind-map');
-const simpleMindMapDir = path.join(mindMapDir, 'simple-mind-map');
 const themesDir = path.join(libsDir, 'simple-mind-map-plugin-themes');
 
 // 检查是否需要设置代理
@@ -30,23 +29,18 @@ if (!fs.existsSync(libsDir)) {
   console.log('✅ 创建 libs 目录');
 }
 
-// 创建 mind-map 目录
-if (!fs.existsSync(mindMapDir)) {
-  fs.mkdirSync(mindMapDir, { recursive: true });
-  console.log('✅ 创建 mind-map 目录');
-}
+
 
 // 克隆 simple-mind-map
-const simpleMindMapSrcDir = path.join(simpleMindMapDir, 'src');
-if (!fs.existsSync(simpleMindMapDir) || !fs.existsSync(simpleMindMapSrcDir)) {
+if (!fs.existsSync(mindMapDir)) {
   console.log('📥 克隆 simple-mind-map 仓库...');
   try {
     // 先删除可能存在的不完整目录
-    if (fs.existsSync(simpleMindMapDir)) {
-      fs.rmSync(simpleMindMapDir, { recursive: true, force: true });
+    if (fs.existsSync(mindMapDir)) {
+      fs.rmSync(mindMapDir, { recursive: true, force: true });
     }
     execSync(
-      `git clone https://github.com/Jack1c/mind-map.git ${simpleMindMapDir}`,
+      `git clone https://github.com/Jack1c/mind-map.git ${mindMapDir}`,
       {
         stdio: 'inherit',
         env: { ...process.env, ...proxyEnv }

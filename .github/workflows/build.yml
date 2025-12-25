@@ -22,7 +22,7 @@ jobs:
     - name: 设置 Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
         cache: 'npm'
         cache-dependency-path: 'plugin/package-lock.json'
 
@@ -49,7 +49,7 @@ jobs:
 
     - name: 安装 Node.js 依赖
       working-directory: plugin
-      run: npm ci
+      run: npm ci  || npm install
 
     - name: 验证本地依赖完整性
       working-directory: plugin
@@ -59,16 +59,39 @@ jobs:
           echo "❌ simple-mind-map/src/utils/index.js 不存在"
           echo "重新设置本地依赖..."
           npm run setup:local-deps
-        else
-          echo "✅ simple-mind-map 依赖验证通过"
         fi
+
+    - name: 安装本地依赖的依赖
+      working-directory: plugin
+      run: |
+        echo "📦 安装 simple-mind-map 的依赖..."
+        if [ -d "libs/mind-map/simple-mind-map" ]; then
+          cd libs/mind-map/simple-mind-map
+          pwd
+          echo "安装 simple-mind-map 依赖..."
+          npm ci  || npm install 
+          ls -al 
+          echo "✅ simple-mind-map 依赖安装完成"
+          cd ../../..
+        fi
+
+        echo "📦 安装 simple-mind-map-plugin-themes 的依赖..."
+        if [ -d "libs/simple-mind-map-plugin-themes" ]; then
+          cd libs/simple-mind-map-plugin-themes
+          echo "安装 themes 插件依赖..."
+          npm ci  || npm install 
+          echo "✅ themes 插件依赖安装完成"
+          cd ../..
+        fi
+
+        echo ""
+        echo "✅ 所有本地依赖的依赖都已安装"
 
     - name: 构建插件
       working-directory: plugin
       env:
         NODE_ENV: production
-      run: |
-        ls libs/mind-map
+      run: |         
         npm run build
         echo "构建完成，检查输出文件..."
         ls -la ../main.js ../styles.css
