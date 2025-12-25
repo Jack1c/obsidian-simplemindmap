@@ -130,10 +130,10 @@ jobs:
           1. 下载 main.js / styles.css / manifest.json
           2. 复制到 Obsidian 插件目录：
              `.obsidian/plugins/simple-mind-map/`
-      files: |
-        main.js
-        styles.css
-        manifest.json
+        files: |
+          main.js
+          styles.css
+          manifest.json
 
     - name: 构建成功通知
       if: success()
