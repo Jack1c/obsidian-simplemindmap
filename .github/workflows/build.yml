@@ -32,7 +32,7 @@ jobs:
         path: |
           plugin/node_modules
           plugin/libs
-        key: ${{ runner.os }}-npm-${{ hashFiles('plugin/package.json') }}
+        key: ${{ runner.os }}-npm-${{ hashFiles('plugin/package.json', 'plugin/setup-local-deps.js') }}
         restore-keys: |
           ${{ runner.os }}-npm-
 
@@ -40,16 +40,28 @@ jobs:
       working-directory: plugin
       run: |
         echo "检查本地依赖目录..."
-        if [ ! -d "libs/mind-map/simple-mind-map" ]; then
-          echo "本地依赖不存在，运行设置脚本..."
+        if [ ! -d "libs/mind-map/simple-mind-map" ] || [ ! -d "libs/mind-map/simple-mind-map/src" ]; then
+          echo "本地依赖不存在或不完整，运行设置脚本..."
           npm run setup:local-deps
         else
-          echo "本地依赖已存在，跳过设置"
+          echo "本地依赖已存在且完整，跳过设置"
         fi
 
     - name: 安装 Node.js 依赖
       working-directory: plugin
       run: npm ci
+
+    - name: 验证本地依赖完整性
+      working-directory: plugin
+      run: |
+        echo "验证 simple-mind-map 依赖..."
+        if [ ! -f "libs/mind-map/simple-mind-map/src/utils/index.js" ]; then
+          echo "❌ simple-mind-map/src/utils/index.js 不存在"
+          echo "重新设置本地依赖..."
+          npm run setup:local-deps
+        else
+          echo "✅ simple-mind-map 依赖验证通过"
+        fi
 
     - name: 构建插件
       working-directory: plugin

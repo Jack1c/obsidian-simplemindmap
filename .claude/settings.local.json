@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm run lint)",
+      "Bash(node -c:*)",
+      "Bash(git clone https://github.com/wanglin2/mind-map.git simple-mind-map-src)",
+      "Bash(export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890)",
+      "Bash(git pull origin main)",
+      "Bash(git checkout main)",
+      "Bash(git pull)",
+      "Bash(git clone https://github.com/wanglin2/simple-mind-map-plugin-themes.git /Users/jack/code/simplemindma/simple-mind-map-plugin-themes-src)",
+      "Bash(mkdir -p libs)",
+      "Bash(node setup-local-deps.js)",
+      "Bash(find /Users/jack/code/simplemindma/obsidian-simplemindmap/plugin/libs/ -name \".DS_Store\" -delete)",
+      "Bash(cat package.json)",
+      "Bash(git remote remove origin)",
+      "Bash(git remote add origin https://github.com/Jack1c/simple-mind-map.git)",
+      "Bash(npm run build:local:*)",
+      "Bash(ls:*)",
+      "Bash(npm run build)",
+      "Bash(npm run dev)",
+      "Bash(git restore:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\n修复侧边栏调整大小后不会收回的问题\n\n- 动态计算侧边栏隐藏位置：根据当前宽度设置 right 值\n- 添加调整大小手柄：支持拖动调整侧边栏宽度（200px-800px）\n- 优化过渡效果：只对 right 属性应用过渡动画\n- 移除固定 CSS 值：宽度和位置改为动态计算\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\n优化节点备注侧边栏交互逻辑\n\n- 移除节点激活时自动关闭侧边栏的逻辑\n- 侧边栏现在只在点击关闭按钮时才关闭\n- 提供更稳定的备注编辑体验\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(find:*)",
+      "Bash(git commit:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run web:build:*)",
+      "Bash(timeout:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
