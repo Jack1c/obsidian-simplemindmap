@@ -10,7 +10,9 @@
     "createNodeImageList": "node ./scripts/createNodeImageList.js",
     "ai:serve": "node ./scripts/ai.js",
     "setup:local-deps": "node ./setup-local-deps.js",
-    "setup:local-deps:proxy": "USE_PROXY=true node ./setup-local-deps.js"
+    "setup:local-deps:proxy": "USE_PROXY=true node ./setup-local-deps.js",
+    "build:copy": "node ./scripts/build-and-copy.js",
+    "build:local": "node ./scripts/build-and-copy.js --no-copy"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
