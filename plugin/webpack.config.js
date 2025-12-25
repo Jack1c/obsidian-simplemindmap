@@ -21,7 +21,9 @@ module.exports = {
       '@': path.resolve(__dirname, './src'),
       stream: require.resolve('stream-browserify'),
       'simple-mind-map': path.resolve(__dirname, './libs/mind-map/simple-mind-map'),
-      'simple-mind-map-plugin-themes': path.resolve(__dirname, './libs/simple-mind-map-plugin-themes')
+      'simple-mind-map-plugin-themes': path.resolve(__dirname, './libs/simple-mind-map-plugin-themes'),
+      'quill-delta': path.resolve(__dirname, './libs/mind-map/simple-mind-map/node_modules/.pnpm/quill-delta@5.1.0/node_modules/quill-delta'),
+      'parchment': path.resolve(__dirname, './libs/mind-map/simple-mind-map/node_modules/.pnpm/parchment@3.0.0/node_modules/parchment')
     },
     fallback: {
       string_decoder: require.resolve('string_decoder/'),

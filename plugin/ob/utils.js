@@ -107,7 +107,7 @@ export const checkVersion = async (
     const gitAPIrequest = async () => {
       return JSON.parse(
         await request({
-          url: `https://api.github.com/repos/wanglin2/obsidian-simplemindmap/releases?per_page=15&page=1`
+          url: `https://api.github.com/repos/jack1c/obsidian-simplemindmap/releases?per_page=15&page=1`
         })
       )
     }
