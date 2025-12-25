@@ -1,4 +1,5 @@
 import manifestJson from '../../manifest.json'
+import { Modal } from 'obsidian'
 
 //  极简的深拷贝
 export const simpleDeepClone = data => {
@@ -111,18 +112,26 @@ export const checkVersion = async (
         })
       )
     }
-    const latestVersion = (await gitAPIrequest())
+    const releases = (await gitAPIrequest())
       .filter(el => !el.draft && !el.prerelease)
       .map(el => {
         return {
+          ...el,
           version: el.tag_name,
           published: new Date(el.published_at)
         }
       })
       .filter(el => el.version.match(/^\d+\.\d+\.\d+$/))
-      .sort((el1, el2) => el2.published - el1.published)[0].version
-    if (isVersionNewerThanOther(latestVersion, manifestJson.version)) {
-      callback(latestVersion)
+      .sort((el1, el2) => el2.published - el1.published)
+
+    if (releases.length === 0) {
+      callback()
+      return
+    }
+
+    const latestRelease = releases[0]
+    if (isVersionNewerThanOther(latestRelease.version, manifestJson.version)) {
+      callback(latestRelease.version, latestRelease)
     } else {
       callback()
     }
@@ -161,4 +170,132 @@ export const isVersionNewerThanOther = (version, otherVersion) => {
           parseInt(v[2]) >= parseInt(o[2]) &&
           parseInt(v[3]) > parseInt(o[3])))
   )
+}
+
+/**
+ * 安装插件更新
+ * @param {Object} plugin - 插件实例
+ * @param {Object} release - GitHub release 信息
+ * @param {Function} onProgress - 进度回调函数
+ * @returns {Promise<boolean>} 更新是否成功
+ */
+export const installPluginUpdate = async (plugin, release, onProgress = () => {}) => {
+  try {
+    if (!plugin || !release || !release.assets) {
+      throw new Error('无效的参数')
+    }
+
+    // 查找需要的文件
+    const mainJsAsset = release.assets.find(asset => asset.name === 'main.js')
+    const stylesCssAsset = release.assets.find(asset => asset.name === 'styles.css')
+    const manifestJsonAsset = release.assets.find(asset => asset.name === 'manifest.json')
+
+    if (!mainJsAsset || !stylesCssAsset || !manifestJsonAsset) {
+      throw new Error('Release 中缺少必要的文件')
+    }
+
+    // 获取插件目录
+    const pluginId = 'simple-mind-map'
+    const pluginsDir = `${plugin.app.vault.configDir}/plugins`
+    const pluginDir = `${pluginsDir}/${pluginId}`
+
+    // 确保插件目录存在
+    if (!await plugin.app.vault.adapter.exists(pluginDir)) {
+      await plugin.app.vault.adapter.mkdir(pluginDir)
+    }
+
+    // 下载并保存文件
+    const downloadAndSave = async (asset, filename) => {
+      onProgress(`正在下载 ${filename}...`)
+      const response = await request({
+        url: asset.browser_download_url,
+        method: 'GET'
+      })
+
+      const filePath = `${pluginDir}/${filename}`
+      await plugin.app.vault.adapter.writeBinary(filePath, response)
+      onProgress(`已保存 ${filename}`)
+    }
+
+    // 下载三个文件
+    await downloadAndSave(mainJsAsset, 'main.js')
+    await downloadAndSave(stylesCssAsset, 'styles.css')
+    await downloadAndSave(manifestJsonAsset, 'manifest.json')
+
+    onProgress('更新完成！请重启 Obsidian 使更改生效。')
+    return true
+  } catch (error) {
+    console.error('安装更新失败:', error)
+    onProgress(`更新失败: ${error.message}`)
+    return false
+  }
+}
+
+/**
+ * 显示更新对话框
+ * @param {Object} plugin - 插件实例
+ * @param {string} version - 新版本号
+ * @param {Object} release - GitHub release 信息
+ */
+export const showUpdateDialog = (plugin, version, release) => {
+  // 创建模态对话框
+  const modal = new Modal(plugin.app)
+
+  modal.setTitle(`发现新版本 ${version}`)
+
+  // 创建内容容器
+  const contentEl = modal.contentEl
+  contentEl.createEl('p', {
+    text: `当前版本: ${manifestJson.version}，发现新版本: ${version}`
+  })
+
+  contentEl.createEl('p', {
+    text: '是否立即更新？更新后需要重启 Obsidian。'
+  })
+
+  // 更新按钮
+  const updateButton = contentEl.createEl('button', {
+    text: '立即更新',
+    cls: 'mod-cta'
+  })
+
+  updateButton.addEventListener('click', async () => {
+    updateButton.setText('更新中...')
+    updateButton.disabled = true
+
+    const progressEl = contentEl.createEl('p', {
+      text: '开始下载更新...'
+    })
+
+    const result = await installPluginUpdate(plugin, release, (message) => {
+      progressEl.setText(message)
+    })
+
+    if (result) {
+      progressEl.setText('更新成功！请重启 Obsidian。')
+      updateButton.remove()
+
+      // 添加重启提示
+      contentEl.createEl('p', {
+        text: '请关闭此对话框并重启 Obsidian 以完成更新。',
+        cls: 'mod-warning'
+      })
+    } else {
+      progressEl.setText('更新失败，请手动下载安装。')
+      updateButton.setText('重试')
+      updateButton.disabled = false
+    }
+  })
+
+  // 取消按钮
+  const cancelButton = contentEl.createEl('button', {
+    text: '稍后更新',
+    cls: 'mod'
+  })
+
+  cancelButton.addEventListener('click', () => {
+    modal.close()
+  })
+
+  modal.open()
 }

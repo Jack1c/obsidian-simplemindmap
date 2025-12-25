@@ -3,7 +3,7 @@ import themeList from 'simple-mind-map-plugin-themes/themeList'
 import { layoutGroupList } from '../src/config'
 import { GITHUB_ICON, DEFAULT_SETTINGS, COMMUNITY_ICON } from './constant'
 import { SuggestionModal } from './SuggestionModal'
-import { checkVersion } from './utils'
+import { checkVersion, showUpdateDialog } from './utils'
 
 const validateInteger = (value, defaultValue = 0, errorTip) => {
   value = Number(value)
@@ -651,9 +651,9 @@ export default class SmmSettingTab extends PluginSettingTab {
       .addExtraButton(button => {
         button.setIcon('refresh-cw').onClick(async () => {
           checkVersion(
-            version => {
-              if (version) {
-                new Notice(this.plugin._t('tip.pluginNewVersion') + version)
+            (version, release) => {
+              if (version && release) {
+                showUpdateDialog(this.plugin, version, release)
               } else {
                 new Notice(this.plugin._t('tip.pluginNoNewVersion'))
               }

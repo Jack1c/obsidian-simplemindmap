@@ -15,7 +15,7 @@ import {
   parseMarkdownText,
   createDefaultText
 } from './ob/metadataAndMarkdown.js'
-import { hideTargetMenu, checkVersion } from './ob/utils.js'
+import { hideTargetMenu, checkVersion, showUpdateDialog } from './ob/utils.js'
 import LZString from 'lz-string'
 import logger from './ob/logger.js'
 
@@ -128,9 +128,9 @@ class SmmEditView extends TextFileView {
 
     // 检查更新
     if (this.plugin.settings.openVersionCheck) {
-      checkVersion(version => {
-        if (version) {
-          new Notice(this.plugin._t('tip.pluginNewVersion') + version)
+      checkVersion((version, release) => {
+        if (version && release) {
+          showUpdateDialog(this.plugin, version, release)
         }
       })
     }
