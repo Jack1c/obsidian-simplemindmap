@@ -25,7 +25,11 @@ obsidian-simplemindmap/
 │   │   ├── SmmSettingTab.js  # 设置面板
 │   │   └── utils.js          # 工具函数
 │   ├── locales/              # 国际化文件
-│   └── webpack.config.js     # Webpack 配置
+│   ├── libs/                 # 本地依赖（simple-mind-map 和 themes 插件）
+│   │   ├── simple-mind-map/  # 思维导图核心库（从 GitHub 克隆）
+│   │   └── simple-mind-map-plugin-themes/  # 主题插件（从 GitHub 克隆）
+│   ├── webpack.config.js     # Webpack 配置
+│   └── setup-local-deps.js   # 本地依赖设置脚本
 ├── main.js                   # 构建后的插件主文件（输出到根目录）
 ├── styles.css                # 构建后的样式文件（输出到根目录）
 └── manifest.json             # Obsidian 插件清单
@@ -36,6 +40,12 @@ obsidian-simplemindmap/
 ### 常用命令（在 plugin/ 目录下运行）
 
 ```bash
+# 设置本地依赖（首次运行需要）
+npm run setup:local-deps
+
+# 使用代理设置本地依赖（如果网络有问题）
+npm run setup:local-deps:proxy
+
 # 开发模式（监听文件变化）
 npm run dev
 
@@ -57,10 +67,32 @@ npm run ai:serve
 
 ### 开发流程
 
-1. **进入开发目录**：所有开发工作都在 `plugin/` 目录下进行
-2. **启动开发模式**：运行 `npm run dev`，Webpack 会监听文件变化并自动重新构建
-3. **测试插件**：构建后的文件输出到项目根目录（`main.js` 和 `styles.css`），需要复制到 Obsidian 的插件目录进行测试
-4. **生产构建**：完成开发后运行 `npm run build` 生成最终版本
+1. **设置本地依赖**（首次运行）：
+   ```bash
+   # 直接克隆（需要网络访问 GitHub）
+   npm run setup:local-deps
+
+   # 或使用代理（如果网络有问题）
+   npm run setup:local-deps:proxy
+   ```
+
+   这会将 `simple-mind-map` 和 `simple-mind-map-plugin-themes` 克隆到 `plugin/libs/` 目录。
+
+2. **进入开发目录**：所有开发工作都在 `plugin/` 目录下进行
+3. **启动开发模式**：运行 `npm run dev`，Webpack 会监听文件变化并自动重新构建
+4. **测试插件**：构建后的文件输出到项目根目录（`main.js` 和 `styles.css`），需要复制到 Obsidian 的插件目录进行测试
+5. **生产构建**：完成开发后运行 `npm run build` 生成最终版本
+
+### 本地依赖说明
+
+项目使用本地依赖而不是 npm 包，原因：
+- 可以直接修改和调试 `simple-mind-map` 核心代码
+- 避免 npm 包版本锁定问题
+- 支持私有分支和自定义修改
+
+本地依赖位置：
+- `plugin/libs/simple-mind-map/` - 思维导图核心库
+- `plugin/libs/simple-mind-map-plugin-themes/` - 主题插件
 
 ### 文件输出
 

@@ -1,0 +1,149 @@
+name: Build and Release Obsidian Plugin
+permissions:
+  contents: write
+on:
+  push:
+    branches: [ main, note ]
+    paths:
+      - 'plugin/**'
+      - 'manifest.json'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: 设置 Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: 'plugin/package-lock.json'
+
+    - name: 缓存依赖
+      uses: actions/cache@v4
+      with:
+        path: |
+          plugin/node_modules
+          plugin/libs
+        key: ${{ runner.os }}-npm-${{ hashFiles('plugin/package.json', 'plugin/setup-local-deps.js') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+
+    - name: 安装本地依赖
+      working-directory: plugin
+      run: |
+        echo "检查本地依赖目录..."
+        if [ ! -d "libs/mind-map/simple-mind-map" ] || [ ! -d "libs/mind-map/simple-mind-map/src" ]; then
+          echo "本地依赖不存在或不完整，运行设置脚本..."
+          npm run setup:local-deps
+        else
+          echo "本地依赖已存在且完整，跳过设置"
+        fi
+
+    - name: 安装 Node.js 依赖
+      working-directory: plugin
+      run: npm ci  || npm install
+
+    - name: 验证本地依赖完整性
+      working-directory: plugin
+      run: |
+        echo "验证 simple-mind-map 依赖..."
+        if [ ! -f "libs/mind-map/simple-mind-map/src/utils/index.js" ]; then
+          echo "❌ simple-mind-map/src/utils/index.js 不存在"
+          echo "重新设置本地依赖..."
+          npm run setup:local-deps
+        fi
+
+    - name: 安装本地依赖的依赖
+      working-directory: plugin
+      run: |
+        echo "📦 安装 simple-mind-map 的依赖..."
+        if [ -d "libs/mind-map/simple-mind-map" ]; then
+          cd libs/mind-map/simple-mind-map
+          pwd
+          echo "安装 simple-mind-map 依赖..."
+          npm ci  || npm install 
+          ls -al 
+          echo "✅ simple-mind-map 依赖安装完成"
+          cd ../../..
+        fi
+
+        echo "📦 安装 simple-mind-map-plugin-themes 的依赖..."
+        if [ -d "libs/simple-mind-map-plugin-themes" ]; then
+          cd libs/simple-mind-map-plugin-themes
+          echo "安装 themes 插件依赖..."
+          npm ci  || npm install 
+          echo "✅ themes 插件依赖安装完成"
+          cd ../..
+        fi
+
+        echo ""
+        echo "✅ 所有本地依赖的依赖都已安装"
+
+    - name: 构建插件
+      working-directory: plugin
+      env:
+        NODE_ENV: production
+      run: |         
+        npm run build
+        echo "构建完成，检查输出文件..."
+        ls -la ../main.js ../styles.css
+
+    - name: 验证构建产物
+      working-directory: .
+      run: |
+        ls
+        if [ ! -f "./main.js" ]; then
+          echo "❌ main.js 不存在，构建失败"
+          exit 1
+        fi
+        if [ ! -f "./styles.css" ]; then
+          echo "❌ styles.css 不存在，构建失败"
+          exit 1
+        fi
+
+        echo "✅ 构建产物验证通过"
+        echo "main.js 大小: $(wc -c < ./main.js) 字节"
+        echo "styles.css 大小: $(wc -c < ./styles.css) 字节"
+
+    - name: 创建 Release 并上传产物
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
+        body: |
+          ## 自动构建版本
+
+          - 构建时间: ${{ github.run_started_at }}
+          - 提交: ${{ github.sha }}
+          - 分支: ${{ github.ref_name }}
+
+          ### 使用方法
+          1. 下载 main.js / styles.css / manifest.json
+          2. 复制到 Obsidian 插件目录：
+             `.obsidian/plugins/simple-mind-map/`
+        files: |
+          main.js
+          styles.css
+          manifest.json
+
+    - name: 构建成功通知
+      if: success()
+      run: |
+        echo "✅ 构建成功！"
+        echo "发布版本: v${{ github.run_number }}"
+        echo "文件已上传到 Release"
+
+    - name: 构建失败通知
+      if: failure()
+      run: |
+        echo "❌ 构建失败"
+        echo "请检查日志以获取详细信息"

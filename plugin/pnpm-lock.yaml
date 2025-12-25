@@ -27,11 +27,11 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       simple-mind-map:
-        specifier: ^0.14.0-fix.1
-        version: 0.14.0-fix.1
+        specifier: file:./libs/mind-map/simple-mind-map
+        version: file:libs/mind-map/simple-mind-map
       simple-mind-map-plugin-themes:
-        specifier: ^1.0.0
-        version: 1.0.1
+        specifier: file:./libs/simple-mind-map-plugin-themes
+        version: file:libs/simple-mind-map-plugin-themes
       v-viewer:
         specifier: ^1.6.4
         version: 1.7.4(viewerjs@1.11.7)(vue@2.7.16)
@@ -72,6 +72,9 @@ importers:
       builtin-modules:
         specifier: 3.3.0
         version: 3.3.0
+      cross-env:
+        specifier: ^10.1.0
+        version: 10.1.0
       css-loader:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.103.0)
@@ -642,6 +645,9 @@ packages:
   '@discoveryjs/json-ext@0.6.3':
     resolution: {integrity: sha512-4B4OijXeVNOPZlYA2oEwWOTkzyltLao+xbotHQeqN++Rv27Y6s818+n2Qkp8q+Fxhn0t/5lA5X1Mxktud8eayQ==}
     engines: {node: '>=14.17.0'}
+
+  '@epic-web/invariant@1.0.0':
+    resolution: {integrity: sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==}
 
   '@esbuild/android-arm64@0.17.19':
     resolution: {integrity: sha512-KBMWvEZooR7+kzY0BtbTQn0OAYY7CsiydT63pVEaPtVYF0hXbUaOyZog37DKxK7NF3XacBJOpYT4adIJh+avxA==}
@@ -1447,6 +1453,11 @@ packages:
   crelt@1.0.6:
     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
 
+  cross-env@10.1.0:
+    resolution: {integrity: sha512-GsYosgnACZTADcmEyJctkJIoqAhHjttw7RsFrVoJNXbsWWqaq6Ym+7kZjq6mS45O0jij6vtiReppKQEtqWy6Dw==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
@@ -1973,8 +1984,8 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
 
-  lib0@0.2.114:
-    resolution: {integrity: sha512-gcxmNFzA4hv8UYi8j43uPlQ7CGcyMJ2KQb5kZASw6SnAKAf10hK12i2fjrS3Cl/ugZa5Ui6WwIu1/6MIXiHttQ==}
+  lib0@0.2.116:
+    resolution: {integrity: sha512-4zsosjzmt33rx5XjmFVYUAeLNh+BTeDTiwGdLt4muxiir2btsc60Nal0EvkvDRizg+pnlK1q+BtYi7M+d4eStw==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -2703,11 +2714,11 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
 
-  simple-mind-map-plugin-themes@1.0.1:
-    resolution: {integrity: sha512-p6+O1nZ25YknJ8LXIXHkrOhFq1GErCc5sAga3/AXfsJy2W9Dsp49ZynYq8+RBgUpZlNXrZPhW2gmFvf0nl1Rtg==}
+  simple-mind-map-plugin-themes@file:libs/simple-mind-map-plugin-themes:
+    resolution: {directory: libs/simple-mind-map-plugin-themes, type: directory}
 
-  simple-mind-map@0.14.0-fix.1:
-    resolution: {integrity: sha512-LuX2+32cS/lIB2AxmzkLZi5NHbrHuXBha3v0O376PE75K4ivAFoXYzJQ661/ls2E16ZOWwgvx9q4znt7jTBXxA==}
+  simple-mind-map@file:libs/mind-map/simple-mind-map:
+    resolution: {directory: libs/mind-map/simple-mind-map, type: directory}
 
   simple-peer@9.11.1:
     resolution: {integrity: sha512-D1SaWpOW8afq1CZGWB8xTfrT3FekjQmPValrqncJMX7QFl8YwhrPTZvMCANLtgBwwdS+7zURyqxDDEmY558tTw==}
@@ -3019,8 +3030,8 @@ packages:
     resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
     hasBin: true
 
-  y-protocols@1.0.6:
-    resolution: {integrity: sha512-vHRF2L6iT3rwj1jub/K5tYcTT/mEYDUppgNPXwp8fmLpui9f7Yeq3OEtTLVF012j39QnV+KEQpNqoN7CWU7Y9Q==}
+  y-protocols@1.0.7:
+    resolution: {integrity: sha512-YSVsLoXxO67J6eE/nV4AtFtT3QEotZf5sK5BHxFBXso7VDUT3Tx07IfA6hsu5Q5OmBdMkQVmFZ9QOA7fikWvnw==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
     peerDependencies:
       yjs: ^13.0.0
@@ -3038,8 +3049,8 @@ packages:
   yallist@3.1.1:
     resolution: {integrity: sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==}
 
-  yjs@13.6.27:
-    resolution: {integrity: sha512-OIDwaflOaq4wC6YlPBy2L6ceKeKuF7DeTxx+jPzv1FHn9tCZ0ZwSRnUBxD05E3yed46fv/FWJbvR+Ud7x0L7zw==}
+  yjs@13.6.28:
+    resolution: {integrity: sha512-EgnDOXs8+hBVm6mq3/S89Kiwzh5JRbn7w2wXwbrMRyKy/8dOFsLvuIfC+x19ZdtaDc0tA9rQmdZzbqqNHG44wA==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
 
   yocto-queue@0.1.0:
@@ -3726,6 +3737,8 @@ snapshots:
 
   '@discoveryjs/json-ext@0.6.3': {}
 
+  '@epic-web/invariant@1.0.0': {}
+
   '@esbuild/android-arm64@0.17.19':
     optional: true
 
@@ -4381,6 +4394,11 @@ snapshots:
 
   crelt@1.0.6: {}
 
+  cross-env@10.1.0:
+    dependencies:
+      '@epic-web/invariant': 1.0.0
+      cross-spawn: 7.0.6
+
   cross-spawn@7.0.6:
     dependencies:
       path-key: 3.1.1
@@ -4900,7 +4918,7 @@ snapshots:
       native-request: 1.1.2
       source-map: 0.6.1
 
-  lib0@0.2.114:
+  lib0@0.2.116:
     dependencies:
       isomorphic.js: 0.2.5
 
@@ -5682,11 +5700,11 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  simple-mind-map-plugin-themes@1.0.1:
+  simple-mind-map-plugin-themes@file:libs/simple-mind-map-plugin-themes:
     dependencies:
       esbuild: 0.17.19
 
-  simple-mind-map@0.14.0-fix.1:
+  simple-mind-map@file:libs/mind-map/simple-mind-map:
     dependencies:
       '@svgdotjs/svg.js': 3.2.0
       deepmerge: 1.5.2
@@ -5700,8 +5718,8 @@ snapshots:
       uuid: 9.0.1
       ws: 7.5.10
       xml-js: 1.6.11
-      y-webrtc: 10.3.0(yjs@13.6.27)
-      yjs: 13.6.27
+      y-webrtc: 10.3.0(yjs@13.6.28)
+      yjs: 13.6.28
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -6079,17 +6097,17 @@ snapshots:
     dependencies:
       sax: 1.4.3
 
-  y-protocols@1.0.6(yjs@13.6.27):
+  y-protocols@1.0.7(yjs@13.6.28):
     dependencies:
-      lib0: 0.2.114
-      yjs: 13.6.27
+      lib0: 0.2.116
+      yjs: 13.6.28
 
-  y-webrtc@10.3.0(yjs@13.6.27):
+  y-webrtc@10.3.0(yjs@13.6.28):
     dependencies:
-      lib0: 0.2.114
+      lib0: 0.2.116
       simple-peer: 9.11.1
-      y-protocols: 1.0.6(yjs@13.6.27)
-      yjs: 13.6.27
+      y-protocols: 1.0.7(yjs@13.6.28)
+      yjs: 13.6.28
     optionalDependencies:
       ws: 8.18.3
     transitivePeerDependencies:
@@ -6101,8 +6119,8 @@ snapshots:
 
   yallist@3.1.1: {}
 
-  yjs@13.6.27:
+  yjs@13.6.28:
     dependencies:
-      lib0: 0.2.114
+      lib0: 0.2.116
 
   yocto-queue@0.1.0: {}

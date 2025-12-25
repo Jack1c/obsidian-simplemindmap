@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Local dependencies (will be cloned by setup script)
+libs/
+
+# Build outputs (go to parent directory)
+../main.js
+../styles.css
+../main.js.LICENSE.txt
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temp files
+*.tmp
+*.temp
