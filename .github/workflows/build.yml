@@ -116,7 +116,6 @@ jobs:
 
     - name: 创建 Release 并上传产物
       uses: softprops/action-gh-release@v2
-      working-directory: .
       with:
         tag_name: v${{ github.run_number }}
         name: Release v${{ github.run_number }}
