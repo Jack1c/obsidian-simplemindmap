@@ -222,7 +222,7 @@ export const installPluginUpdate = async (plugin, release, onProgress = () => {}
     await downloadAndSave(stylesCssAsset, 'styles.css')
     await downloadAndSave(manifestJsonAsset, 'manifest.json')
 
-    onProgress('更新完成！请重启 Obsidian 使更改生效。')
+    onProgress('更新完成！文件已保存到插件目录。')
     return true
   } catch (error) {
     console.error('安装更新失败:', error)
@@ -272,13 +272,60 @@ export const showUpdateDialog = (plugin, version, release) => {
     })
 
     if (result) {
-      progressEl.setText('更新成功！请重启 Obsidian。')
+      progressEl.setText('更新成功！您可以选择：')
       updateButton.remove()
 
-      // 添加重启提示
+      // 重新加载按钮
+      const reloadButton = contentEl.createEl('button', {
+        text: '立即重新加载插件',
+        cls: 'mod-cta'
+      })
+
+      reloadButton.addEventListener('click', async () => {
+        reloadButton.setText('重新加载中...')
+        reloadButton.disabled = true
+
+        try {
+          // 尝试重新加载插件
+          const pluginId = 'simple-mind-map'
+
+          // 先禁用插件
+          await plugin.app.plugins.disablePlugin(pluginId)
+          progressEl.setText('插件已禁用，正在重新启用...')
+
+          // 等待短暂时间确保禁用完成
+          await new Promise(resolve => setTimeout(resolve, 1000))
+
+          // 重新启用插件
+          await plugin.app.plugins.enablePlugin(pluginId)
+
+          progressEl.setText('插件重新加载成功！')
+          reloadButton.remove()
+
+          // 提示用户可能需要刷新视图
+          contentEl.createEl('p', {
+            text: '插件已重新加载。如果思维导图视图没有更新，请关闭并重新打开文件。',
+            cls: 'mod-success'
+          })
+
+        } catch (reloadError) {
+          console.error('重新加载插件失败:', reloadError)
+          progressEl.setText(`重新加载失败: ${reloadError.message}`)
+          reloadButton.setText('重试重新加载')
+          reloadButton.disabled = false
+
+          // 提供手动重新加载提示
+          contentEl.createEl('p', {
+            text: '请手动重启 Obsidian 或通过插件管理界面重新加载插件。',
+            cls: 'mod-warning'
+          })
+        }
+      })
+
+      // 手动重启提示
       contentEl.createEl('p', {
-        text: '请关闭此对话框并重启 Obsidian 以完成更新。',
-        cls: 'mod-warning'
+        text: '或手动重启 Obsidian 使更改生效。',
+        cls: 'mod'
       })
     } else {
       progressEl.setText('更新失败，请手动下载安装。')
