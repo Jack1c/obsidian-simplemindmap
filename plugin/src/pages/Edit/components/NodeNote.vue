@@ -31,7 +31,7 @@
 <script>
 import Editor from '@toast-ui/editor'
 import '@toast-ui/editor/dist/i18n/zh-cn'
-import '@toast-ui/editor/dist/i18n/zh-TW'
+import '@toast-ui/editor/dist/i18n/zh-tw'
 import { mapState } from 'vuex'
 import { toastUiEditorLangMap } from '@/config/constant'
 import { compressImage, isNormalUrl } from '@/utils'
