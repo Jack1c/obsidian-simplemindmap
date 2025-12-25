@@ -1,5 +1,6 @@
 name: Build and Release Obsidian Plugin
-
+permissions:
+  contents: write
 on:
   push:
     branches: [ main, note ]
@@ -113,60 +114,26 @@ jobs:
         echo "main.js 大小: $(wc -c < ./main.js) 字节"
         echo "styles.css 大小: $(wc -c < ./styles.css) 字节"
 
-    - name: 创建 Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: 创建 Release 并上传产物
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: v${{ github.run_number }}
-        release_name: Release v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
         body: |
           ## 自动构建版本
 
-          - 构建时间: ${{ github.event.head_commit.timestamp }}
+          - 构建时间: ${{ github.run_started_at }}
           - 提交: ${{ github.sha }}
-          - 分支: ${{ github.ref }}
-
-          ### 变更内容
-          ${{ github.event.head_commit.message }}
+          - 分支: ${{ github.ref_name }}
 
           ### 使用方法
-          1. 下载 main.js 和 styles.css
-          2. 复制到 Obsidian 插件目录: `.obsidian/plugins/simple-mind-map/`
-          3. 确保 manifest.json 也在同一目录
-        draft: false
-        prerelease: false
-
-    - name: 上传 main.js
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../main.js
-        asset_name: main.js
-        asset_content_type: application/javascript
-
-    - name: 上传 styles.css
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../styles.css
-        asset_name: styles.css
-        asset_content_type: text/css
-
-    - name: 上传 manifest.json
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ../manifest.json
-        asset_name: manifest.json
-        asset_content_type: application/json
+          1. 下载 main.js / styles.css / manifest.json
+          2. 复制到 Obsidian 插件目录：
+             `.obsidian/plugins/simple-mind-map/`
+      files: |
+        main.js
+        styles.css
+        manifest.json
 
     - name: 构建成功通知
       if: success()
