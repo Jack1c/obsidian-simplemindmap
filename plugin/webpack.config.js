@@ -20,7 +20,7 @@ module.exports = {
       vue$: 'vue/dist/vue.esm.js', // 确保使用完整版 Vue（包含模板编译器）
       '@': path.resolve(__dirname, './src'),
       stream: require.resolve('stream-browserify'),
-      'simple-mind-map': path.resolve(__dirname, './libs/simple-mind-map'),
+      'simple-mind-map': path.resolve(__dirname, './libs/mind-map/simple-mind-map'),
       'simple-mind-map-plugin-themes': path.resolve(__dirname, './libs/simple-mind-map-plugin-themes')
     },
     fallback: {
